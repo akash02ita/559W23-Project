@@ -1,5 +1,6 @@
 import './App.css';
 import styled from 'styled-components';
+import { BsUpload } from 'react-icons/bs'
 
 const Button = styled.button`
   background-color: #0072C6;
@@ -48,9 +49,20 @@ function App() {
           </Button>
         </div>
         <div>
-          <Button onClick={uploadFn} className="Upload_Btn">
-            Upload
-          </Button>
+          <main>
+            <form onClick={ () => document.querySelector(".input-field").click()}
+            >
+              <input type="file" accept='image/*' className='input-field' hidden />
+
+              <BsUpload size={30}/>
+
+
+            </form>
+          
+          </main>
+
+            
+            
         </div>
       </div>
       
