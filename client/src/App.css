@@ -14,14 +14,20 @@
 }
 
 #headerTxt{
-  padding-right: 10%;
+  padding-right: 20%;
+  margin-bottom: 0; /*So that the footer with the full name sits right below it*/
 }
+
+#footerInHeader{
+  font-weight: 700;
+}
+
 
 .SearchBar{
   padding-left: 4%;
-  margin-top: 6%;/*moves bar downwards*/
+  margin-top: 3%;/*moves bar downwards*/
   min-height: 40px;
-  min-width: 400px;
+  min-width: 600px;
   border-radius: 22px;
   border: 2px #0072C6;
   background-color: #D3D3D3;
@@ -38,6 +44,16 @@
 }
 
 .Download_Btn{
+  background-color: #0072C6;
+  color: white;
+  padding: 5px 5px ;
+  border-radius: 10px;
+  border-color: #FFFFFF;
+  outline: 0;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0px 2px 2px lightgray;
+  transition: ease background-color 250ms; /*used to be in styled-components */
   display: inline-block;
   justify-content: center;
   align-items: center;
@@ -47,9 +63,19 @@
   margin: 0 20px;
 }
 
+.Download_Btn:hover{
+  background-color: #3cb371;
+}
+
 .trashIcon{
   cursor: pointer;
 }
+
+.trashIcon:hover{
+  color: red;
+}
+
+
 
 .uploadButton{
   display: inline-block;
@@ -57,6 +83,10 @@
   width: 300;
   font-family: -apple-system;
   cursor: pointer;
+}
+
+.uploadButton:hover{
+  color:#0072C6;
 }
 
 /* For table containing file information*/

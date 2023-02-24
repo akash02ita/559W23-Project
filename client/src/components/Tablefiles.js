@@ -1,22 +1,5 @@
-import styled from 'styled-components';
 import {RiDeleteBin6Line} from 'react-icons/ri'
 
-// Used for "Download Button"
-const Button = styled.button`
-  background-color: #0072C6;
-  color: white;
-  padding: 5px 5px ;
-  border-radius: 10px;
-  border-color: #FFFFFF;
-  outline: 0;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0px 2px 2px lightgray;
-  transition: ease background-color 250ms;
-  &:hover {
-    background-color: #546e7a;
-  }
-`
 
 function downloadFn(){
     alert('Download Button was clicked');
@@ -51,7 +34,7 @@ function Tablefiles(){
                 <td>4 MB</td>
                 <td>
                     <div className='actionItems'>
-                        <Button onClick={downloadFn} className="Download_Btn"> Download </Button>
+                        <button onClick={downloadFn} className="Download_Btn"> Download </button>
                         <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
                     </div>
                 </td>
@@ -62,17 +45,35 @@ function Tablefiles(){
                 <td></td>
                 <td>PDF</td>
                 <td>Stakeholder Relations.pdf</td>
-                <td>20/01/2022</td>
+                <td>20/02/2022</td>
                 <td>Carlos Veintimilla</td>
                 <td>150 MB</td>
                 <td>
                     <div className='actionItems'>
-                        <Button onClick={downloadFn} className="Download_Btn"> Download </Button>
+                        <button onClick={downloadFn} className="Download_Btn"> Download </button>
                         <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
                     </div>
                 </td>
 
             </tr>
+
+            <tr>
+                <td></td>
+                <td>Word</td>
+                <td>SiteA-WeeklyMeetings-Notes.docx</td>
+                <td>15/03/2021</td>
+                <td>Harsweet Singh</td>
+                <td>32 MB</td>
+                <td>
+                    <div className='actionItems'>
+                        <button onClick={downloadFn} className="Download_Btn"> Download </button>
+                        <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
+                    </div>
+                </td>
+
+            </tr>
+
+
           </tbody>
 
         </table>

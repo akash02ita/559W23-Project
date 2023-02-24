@@ -13,8 +13,11 @@ function App() {
   return (
     <>
       <div className="App">
-        <h1 id='headerTxt'> DFS-D</h1>
-        
+        <div>
+          <h1 id='headerTxt'> DFS-D</h1>
+            <footer id="footerInHeader"> Distributed File System - Drive</footer>
+        </div>
+          
         <div>
           <input type="text" className='SearchBar' placeholder='Search...' />
         </div>
