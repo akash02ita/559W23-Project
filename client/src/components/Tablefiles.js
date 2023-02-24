@@ -52,7 +52,7 @@ function Tablefiles(){
                 <td>
                     <div className='actionItems'>
                         <Button onClick={downloadFn} className="Download_Btn"> Download </Button>
-                        <RiDeleteBin6Line size={30} onClick={deleteFile}/>
+                        <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
                     </div>
                 </td>
 
@@ -68,7 +68,7 @@ function Tablefiles(){
                 <td>
                     <div className='actionItems'>
                         <Button onClick={downloadFn} className="Download_Btn"> Download </Button>
-                        <RiDeleteBin6Line size={30} onClick={deleteFile}/>
+                        <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
                     </div>
                 </td>
 
