@@ -12,6 +12,7 @@ function deleteFile(){
 function Tablefiles(){
     return(
         <div className='table-container'>
+        <h1 className='myFilesHeader'> My Files</h1>            
         <table>
           <thead>
             <tr>

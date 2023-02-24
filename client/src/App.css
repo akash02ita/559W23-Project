@@ -95,17 +95,20 @@
   flex-direction: column;
   gap: 10px;
   padding: 1rem;
+  width: 90%;
+}
+
+.myFilesHeader{
+  margin-bottom: 0%;
 }
 
 table {
   border-collapse: collapse;
-  width: 100%;
 }
 
 th,
 td {
   border: 1px solid gray;
-  
   text-align: left;
   padding: 8px;
   font-size: 24px;
