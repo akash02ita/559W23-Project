@@ -48,7 +48,6 @@
   width: 300;
   font-family: -apple-system;
   margin: 0 20px;
-
 }
 
 .Upload_Btn{
@@ -88,4 +87,9 @@ th {
 td {
   background-color: #ffffff;
   color: rgb(85, 83, 83);
+}
+
+.actionItems{
+  display: flex;
+  flex-direction: row;
 }
