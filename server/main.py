@@ -1,3 +1,4 @@
+import os
 import shutil
 import uvicorn
 from fastapi import FastAPI, File, UploadFile
@@ -25,6 +26,12 @@ async def download_uploaded_file(file_name: str):
     return FileResponse(
         path=file_location, filename=file_name, media_type="application/octet-stream"
     )
+
+
+@app.get("/fileslist/")
+async def get_list_of_files(file_name: str):
+    files_array = os.listdir("/Users/harsh/Documents/UploadedFiles/")
+    return {"files": files_array}
 
 
 if __name__ == "__main__":
