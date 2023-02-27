@@ -45,18 +45,21 @@ function App() {
       <div className='ButtonRow'>
         <div>
           <main>
-            <div onClick={ () => document.querySelector(".input-field").click()}>
-              <input type="file" accept='image/*' className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} onInput={uploadFn} multiple/>
-              {/* <button onClick={uploadFn}>Upload</button> */}
+            <div>
+              <div onClick={() => document.querySelector(".input-field").click()}>
+                {/* <input type="file" accept='image/*' className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} onInput={uploadFn} multiple/> */}
+                <input type="file" accept='image/*' className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} multiple />
 
-              <BsUpload size={36} className='uploadButton'/>
+                <BsUpload size={36} className='uploadButton' />
+              </div>
+              <button onClick={uploadFn}>Upload</button> {/* using button is better since onInput triggers before onChange (so empty files list is used instead)*/}
+              </div>
 
-            </div>
-
-{/* <form action="/uploadfile/" encType="multipart/form-data" method="post">
-<input name="uploaded_file" type="file" multiple />
-<input type="submit" />
-</form> */}
+              {/* THIS FORM BELOW IS NOT USED ANYMORE */}
+              {/* <form action="/uploadfile/" encType="multipart/form-data" method="post">
+              <input name="uploaded_file" type="file" multiple />
+              <input type="submit" />
+              </form> */}
           
           </main>
         </div>
