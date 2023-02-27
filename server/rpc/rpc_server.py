@@ -27,7 +27,7 @@ class FastAPIServer(rpyc.Service):
         return file_data
 
     def exposed_get_list(self):
-        files_array = os.listdir("/Users/harsh/Documents/UploadedFiles/")
+        files_array = os.listdir("/Users/harsh/Documents/UploadedFilesNode1/")
         return files_array
 
     def get_storage_location(self, filename: str):
