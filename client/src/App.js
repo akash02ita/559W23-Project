@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import { BsUpload } from 'react-icons/bs'
 import Tablefiles from "./components/Tablefiles.js"
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
 function App() {
   const [uploadFiles, setUpfiles] = useState([]);
+  const [tableData, setTableData] = useState([]);
+
   function uploadFn(){
     if (!uploadFiles) return;
     console.log("upload files is", uploadFiles);
@@ -24,10 +26,41 @@ function App() {
         console.log("Receive response for index", index);
         console.log(res);
         console.log(res.data);
-      })
+        updateTableData();
+      });
     })
     //alert('Upload Button was clicked');
   }
+
+  const updateTableData = () => {
+    axios.get("/fileslist/")
+      .then(res => {
+        console.log("Received table data");
+        console.log(res);
+        console.log("Res.data is");
+        console.log(res.data);
+        console.log("The files are ", res.data.files);
+
+        // since backend does not return everything for now manually simulate json data
+        const jsondata = {};
+        res.data.files.forEach((fname, index) => {
+          console.log(`\tLoop at filename ${fname} and index ${index}`);
+          jsondata[fname] = {
+            type: "file",
+            size: 110011,
+            last_modified: "18th January 2023 8:59pm",
+            last_modified_by: "Anonimous"
+          }
+        });
+
+        console.log("json data at the end is ", jsondata);
+        setTableData(jsondata);
+      });
+  }
+
+  useEffect(() => {
+    updateTableData();
+  }, [])
   return (
     <>
       <div className="App">
@@ -65,7 +98,7 @@ function App() {
         </div>
       </div>
 
-      <Tablefiles />
+      <Tablefiles data={tableData}/>
 
     </> 
   );

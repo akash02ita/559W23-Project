@@ -9,7 +9,36 @@ function deleteFile(){
     alert('Delete Button was clicked');
 }
 
-function Tablefiles(){
+function Tablefiles(props){
+    const jsondata = props.data
+    console.log("Tablefiles received json data", jsondata);
+
+    const renderData = () => {
+        const rows = Object.entries(jsondata).map(([fname, fprops], index) => {
+            console.log("data index is", index, "with fname", fname, "and fprops", fprops);
+            return (
+                <tr key={index}>
+                    <td></td>
+                    <td>{fprops.type}</td>
+                    <td>{fname}</td>
+                    <td>{fprops.last_modified}</td>
+                    <td>{fprops.last_modified_by}</td>
+                    <td>{fprops.size} B</td>
+                    <td>
+                        <div className='actionItems'>
+                            <button onClick={downloadFn} className="Download_Btn"> Download </button>
+                            <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon' />
+                        </div>
+                    </td>
+
+                </tr>
+            );
+        });
+
+        return rows;
+    }
+    // TODO: apply get data functionality (renderData)
+    // download link must be present in each download button
     return(
         <div className='table-container'>
         <h1 className='myFilesHeader'> My Files</h1>            
@@ -26,53 +55,8 @@ function Tablefiles(){
             </tr>
           </thead>
           <tbody>
-            <tr>
-                <td></td>
-                <td>Excel</td>
-                <td>Q1 Balance Sheet.xlsx</td>
-                <td>31/01/2023</td>
-                <td>Akashdeep Singh</td>
-                <td>4 MB</td>
-                <td>
-                    <div className='actionItems'>
-                        <button onClick={downloadFn} className="Download_Btn"> Download </button>
-                        <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
-                    </div>
-                </td>
-
-            </tr>
-
-            <tr>
-                <td></td>
-                <td>PDF</td>
-                <td>Stakeholder Relations.pdf</td>
-                <td>20/02/2022</td>
-                <td>Carlos Veintimilla</td>
-                <td>150 MB</td>
-                <td>
-                    <div className='actionItems'>
-                        <button onClick={downloadFn} className="Download_Btn"> Download </button>
-                        <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
-                    </div>
-                </td>
-
-            </tr>
-
-            <tr>
-                <td></td>
-                <td>Word</td>
-                <td>SiteA-WeeklyMeetings-Notes.docx</td>
-                <td>15/03/2021</td>
-                <td>Harsweet Singh</td>
-                <td>32 MB</td>
-                <td>
-                    <div className='actionItems'>
-                        <button onClick={downloadFn} className="Download_Btn"> Download </button>
-                        <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon'/>
-                    </div>
-                </td>
-
-            </tr>
+            {renderData()}
+     
 
 
           </tbody>
