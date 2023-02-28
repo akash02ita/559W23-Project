@@ -1,8 +1,29 @@
 import {RiDeleteBin6Line} from 'react-icons/ri'
+import axios from 'axios';
 
 
-function downloadFn(){
-    alert('Download Button was clicked');
+function downloadFn(filePath){
+  // must encode in url parameter format (? and =)
+  axios.get(`/downloadfile/?file_name=${filePath}`, { responseType: "blob"})
+    .then(res => {
+      console.log(`/downloadfile/?file_name=${filePath} returned`, res);
+      console.log(res.data);
+      return res.data;
+    })
+    .then(blob => {
+      // source : https://stackoverflow.com/questions/73410132/how-to-download-a-file-using-reactjs-with-axios-in-the-frontend-and-fastapi-in-t
+      
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+
+      const fname = filePath; // for now filepath is just same as filename
+      a.download = fname;
+
+      document.body.appendChild(a); // append the element to the dom
+      a.click();
+      a.remove(); // afterwards, remove the element  
+    });
 }
 
 function deleteFile(){
@@ -26,7 +47,7 @@ function Tablefiles(props){
                     <td>{fprops.size} B</td>
                     <td>
                         <div className='actionItems'>
-                            <button onClick={downloadFn} className="Download_Btn"> Download </button>
+                            <button onClick={() => downloadFn(fname)} className="Download_Btn"> Download </button>
                             <RiDeleteBin6Line size={30} onClick={deleteFile} className='trashIcon' />
                         </div>
                     </td>
@@ -37,8 +58,7 @@ function Tablefiles(props){
 
         return rows;
     }
-    // TODO: apply get data functionality (renderData)
-    // download link must be present in each download button
+
     return(
         <div className='table-container'>
         <h1 className='myFilesHeader'> My Files</h1>            
