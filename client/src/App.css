@@ -1,0 +1,130 @@
+.App {
+  display: flex; /*To make it a flexbox*/
+  min-height: 200;
+  min-width: 200;
+  color: black;
+  background-color: #85ACC2;
+  border-style: solid;
+  border-bottom-color: #0072C6;
+  border-left-color: #0072C6;
+  border-right-color: #0072C6;
+  border-top-color: #0072C6;
+  font-family: inter;
+  justify-content: auto;
+}
+
+#headerTxt{
+  padding-right: 20%;
+  margin-bottom: 0; /*So that the footer with the full name sits right below it*/
+}
+
+#footerInHeader{
+  font-weight: 700;
+}
+
+
+.SearchBar{
+  padding-left: 4%;
+  margin-top: 3%;/*moves bar downwards*/
+  min-height: 40px;
+  min-width: 600px;
+  border-radius: 22px;
+  border: 2px #0072C6;
+  background-color: #D3D3D3;
+  border-bottom-color: #0072C6;
+  border-left-color: #0072C6;
+  border-right-color: #0072C6;
+  border-top-color: #0072C6;
+}
+
+.ButtonRow{
+  margin-top: 5%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.Download_Btn{
+  background-color: #0072C6;
+  color: white;
+  padding: 5px 5px ;
+  border-radius: 10px;
+  border-color: #FFFFFF;
+  outline: 0;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0px 2px 2px lightgray;
+  transition: ease background-color 250ms; /*used to be in styled-components */
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+  height: 60;
+  width: 300;
+  font-family: -apple-system;
+  margin: 0 20px;
+}
+
+.Download_Btn:hover{
+  background-color: #3cb371;
+}
+
+.trashIcon{
+  cursor: pointer;
+}
+
+.trashIcon:hover{
+  color: red;
+}
+
+
+
+.uploadButton{
+  display: inline-block;
+  height: 60;
+  width: 300;
+  font-family: -apple-system;
+  cursor: pointer;
+}
+
+.uploadButton:hover{
+  color:#0072C6;
+}
+
+/* For table containing file information*/
+.table-container{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1rem;
+  width: 90%;
+}
+
+.myFilesHeader{
+  margin-bottom: 0%;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid gray;
+  text-align: left;
+  padding: 8px;
+  font-size: 24px;
+}
+
+/* For table Headers*/
+th {
+  background-color: #ffffff;
+}
+
+td {
+  background-color: #ffffff;
+  color: rgb(85, 83, 83);
+}
+
+.actionItems{
+  display: flex;
+  flex-direction: row;
+}
