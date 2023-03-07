@@ -3,7 +3,24 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import StreamingResponse
 import rpyc
 
+credentials = True
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
+
+#adding cors urls
+origins = [
+    'http://localhost:3000'
+]
+
+# adding middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = origins,
+    allow_credentials = credentials,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
+
 
 # We can change this afterwards when deploying
 central_node_ip = "localhost"
