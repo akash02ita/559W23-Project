@@ -4,9 +4,9 @@ import axios from 'axios';
 
 function downloadFn(filePath){
   // must encode in url parameter format (? and =)
-  axios.get(`/downloadfile/?file_name=${filePath}`, { responseType: "blob"})
+  axios.get(`/downloadfile/${filePath}`, { responseType: "blob"})
     .then(res => {
-      console.log(`/downloadfile/?file_name=${filePath} returned`, res);
+      console.log(`/downloadfile/${filePath} returned`, res);
       console.log(res.data);
       return res.data;
     })
