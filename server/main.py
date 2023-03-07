@@ -29,10 +29,10 @@ central_node_conn = rpyc.connect(central_node_ip, central_node_port)
 
 
 @app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-    stuff_read = await file.read()
+async def create_upload_file(uploaded_file: UploadFile = File(...)):
+    stuff_read = await uploaded_file.read()
     response = central_node_conn.root.upload_file(
-        filename=file.filename, data=stuff_read
+        filename=uploaded_file.filename, data=stuff_read
     )
     return {"info": response.decode()}
 
