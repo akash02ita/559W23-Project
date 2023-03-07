@@ -25,8 +25,7 @@ class ReplicaNodeService(rpyc.Service):
         print("Replica info successfully sent\n")
 
         self.storage_locations = [
-            "/Users/harsh/Documents/UploadedFilesNode1/",
-            "/Users/harsh/Documents/UploadedFilesNode2/",
+            f"{FOLDER_PATH}/" # / added at the end
         ]
 
     def exposed_upload_to_replica(self, filename, data):
@@ -50,7 +49,7 @@ class ReplicaNodeService(rpyc.Service):
             return None
 
     def exposed_get_list_from_replica(self):
-        files_array = os.listdir("/Users/harsh/Documents/UploadedFilesNode1/")
+        files_array = os.listdir(f"{FOLDER_PATH}")
         return files_array
 
     def get_storage_location(self, filename: str):
@@ -60,8 +59,21 @@ class ReplicaNodeService(rpyc.Service):
 
 # The code for connecting the replica with the central node
 # goes in here
+import sys, os
 if __name__ == "__main__":
+    DEFAULT_FOLDER_PATH = "./temp"
+    FOLDER_PATH = None
 
+    if len(sys.argv) < 2:
+        print(f"Using default folder path: {DEFAULT_FOLDER_PATH}")
+        FOLDER_PATH = DEFAULT_FOLDER_PATH
+    else:
+        print(f"Using provided path: {sys.argv[1]}\n\tCorresponding absolute path: {os.path.abspath(sys.argv[1])}")
+        FOLDER_PATH = os.path.abspath(sys.argv[1])
+    
+
+    print(f"FOLDER PATH IS {FOLDER_PATH}")
+    if not os.path.exists(FOLDER_PATH): os.makedirs(FOLDER_PATH)
     print("************ STARTING THE REPLICA PROCESS ***********\n")
     t = ThreadedServer(ReplicaNodeService(), port=replica_node_port)
     t.start()
