@@ -48,7 +48,10 @@ class CentralNodeService(rpyc.Service):
     def exposed_get_list(self):
         replica = self.connected_replicas[0]
         replica_conn = rpyc.connect(replica["ip"], replica["port"])
-        return replica_conn.root.get_list_from_replica()
+        if replica_conn.root.get_list_from_replica() is not None:
+            return replica_conn.root.get_list_from_replica()
+        else:
+            return []
 
 
 if __name__ == "__main__":
