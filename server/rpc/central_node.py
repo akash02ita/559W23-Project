@@ -8,6 +8,7 @@ class CentralNodeService(rpyc.Service):
 
     # For accepting a new replica connection
     def exposed_register_replica(self, replica_ip, replica_port):
+        print("Central node detects a replica connecting from port", replica_port)
         self.connected_replicas.append({"ip": replica_ip, "port": replica_port})
         print(
             f"Now we have {len(self.connected_replicas)} replicas connected to central node"
@@ -26,6 +27,7 @@ class CentralNodeService(rpyc.Service):
     def exposed_upload_file(self, filename, data):
         # Upload a file to all connected replicas
         for replica in self.connected_replicas:
+            print("Central node sending to replica port", replica["port"])
             replica_conn = rpyc.connect(replica["ip"], replica["port"])
             replica_conn.root.upload_to_replica(filename, data)
 
