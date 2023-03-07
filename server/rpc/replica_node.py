@@ -63,17 +63,23 @@ import sys, os
 if __name__ == "__main__":
     DEFAULT_FOLDER_PATH = "./temp"
     FOLDER_PATH = None
-
+    PORT = None
     if len(sys.argv) < 2:
+        print(f"Usage `usage {sys.argv[0]} <PORT> or {sys.argv[0]} <PORT> <STORAGEPATH>")
+        exit()
+    if len(sys.argv) < 3:
         print(f"Using default folder path: {DEFAULT_FOLDER_PATH}")
         FOLDER_PATH = DEFAULT_FOLDER_PATH
+        PORT = int(sys.argv[1])
     else:
-        print(f"Using provided path: {sys.argv[1]}\n\tCorresponding absolute path: {os.path.abspath(sys.argv[1])}")
-        FOLDER_PATH = os.path.abspath(sys.argv[1])
+        PORT = int(sys.argv[1])
+        print(f"Using provided path: {sys.argv[1]}\n\tCorresponding absolute path: {os.path.abspath(sys.argv[2])}")
+        FOLDER_PATH = os.path.abspath(sys.argv[2])
     
 
     print(f"FOLDER PATH IS {FOLDER_PATH}")
     if not os.path.exists(FOLDER_PATH): os.makedirs(FOLDER_PATH)
     print("************ STARTING THE REPLICA PROCESS ***********\n")
-    t = ThreadedServer(ReplicaNodeService(), port=replica_node_port)
+    # t = ThreadedServer(ReplicaNodeService(), port=replica_node_port)
+    t = ThreadedServer(ReplicaNodeService(), port=PORT)
     t.start()
