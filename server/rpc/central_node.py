@@ -19,8 +19,7 @@ class CentralNodeService(rpyc.Service):
         # Whenever we have the first connection 
         # It's automatically chosen as the leader
         if len(self.connected_replicas) == 1:
-            self.leader_details["ip"] = replica_ip
-            self.leader_details["port"] = replica_port
+            self.elect_new_leader()
 
 
     # Function to upload a given file
@@ -51,6 +50,17 @@ class CentralNodeService(rpyc.Service):
         replica = self.leader_details
         replica_conn = rpyc.connect(replica["ip"], replica["port"])
         return replica_conn.root.get_list_from_replica()
+
+    # Function for leader election
+    def elect_new_leader(self):
+        print("Trying to elect a new leader")
+
+        if (len(self.connected_replicas)>0):
+            self.leader_details = self.connected_replicas[0]
+            print(f"Successfully elected a new leader")
+        else:
+            self.leader_details = None
+            print("No replica connected. Unable to elect a new leader.")
 
 
 if __name__ == "__main__":
