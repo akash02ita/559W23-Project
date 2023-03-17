@@ -1,11 +1,29 @@
 import rpyc
 from rpyc.utils.server import ThreadedServer
 
+central_node_ip = "localhost"
+central_node_port = 8000
+
+central_backup_ip = "localhost"
+central_backup_port = 8010
+
 
 class CentralNodeService(rpyc.Service):
     def __init__(self):
         self.connected_replicas = []
-        self.connected_backupsForCentral = []
+        
+        print("Making connection to the central node\n")
+        central_node_connection = rpyc.connect(central_node_ip, central_node_port)
+        print("Connection successful\n")
+
+        # Call the function at the central node to register this backup central node
+        # This calls the function at the central node for accepting replica connection
+        print("Sending Central Backup info to the central node")
+        central_node_connection.root.register_central_backup(
+            central_backup_ip, central_backup_port
+        )
+        print("Central Backup info successfully sent\n")
+
 
     # For accepting a new replica connection
     def exposed_register_replica(self, replica_ip, replica_port):
@@ -15,13 +33,8 @@ class CentralNodeService(rpyc.Service):
             f"Now we have {len(self.connected_replicas)} replicas connected to central node"
         )
 
-    # cbu = central back up node
-    def exposed_register_central_backup(self,cbu_ip, cbu_port):
-        print("Central Node detects a Backup Central node connecting from port", cbu_port)
-        self.connected_backupsForCentral.append({"ip": cbu_ip, "port":cbu_port})
-        print(
-            f"Now we have {len(self.connected_backupsForCentral)} central backups connected to central node"
-        )
+    
+
 
     # We can look into this afterwards, not a core requirement
     # # For finding and disconnection froma given replica
@@ -63,6 +76,7 @@ class CentralNodeService(rpyc.Service):
 
 
 if __name__ == "__main__":
-    # Start the central node server on port 8000
-    t = ThreadedServer(CentralNodeService(), port=8000)
+    # Start the central node server on port 8010
+    print("************ STARTING THE CENTRAL BACKUP NODE ***********\n")
+    t = ThreadedServer(CentralNodeService(), port=8010)
     t.start()
