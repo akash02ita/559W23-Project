@@ -7,6 +7,7 @@ import time
 class CentralNodeService(rpyc.Service):
     def __init__(self):
         self.connected_replicas = []
+        self.new_replicas = []
         self.leader_details = { "ip": None, "port": None }
         self.check_replicas_thread = threading.Thread(target=self.check_replicas, daemon=True)
         self.check_replicas_thread.start()
@@ -23,7 +24,9 @@ class CentralNodeService(rpyc.Service):
         # It's automatically chosen as the leader
         if len(self.connected_replicas) == 1:
             self.elect_new_leader()
-
+        # It means it's a replica after the first one has connected
+        else:
+            self.new_replicas.append({"ip": replica_ip, "port": replica_port})
 
     # Function to upload a given file
     def exposed_upload_file(self, filename, data):
@@ -65,6 +68,27 @@ class CentralNodeService(rpyc.Service):
             self.leader_details = None
             print("No replica connected. Unable to elect a new leader.")
 
+
+    def copy_stuff_to_new_replicas(self):
+
+        for new_replica in self.new_replicas:
+                
+            # This means it's some new replica connecting
+            # Just copy all of leader replica stuff to it
+            print("Copying data to the newly connected replica from leader")
+            leader_info = self.leader_details
+            leader_conn = rpyc.connect(leader_info["ip"], leader_info["port"])
+            new_replica_conn = rpyc.connect(new_replica["ip"], new_replica["port"])
+            
+            list_of_files = leader_conn.root.get_list_from_replica()
+            for file in list_of_files:
+                file_data = leader_conn.root.download_from_replica(file)
+                new_replica_conn.root.upload_to_replica(file, file_data)
+
+            self.new_replicas.remove(new_replica)
+            print("Copying finished")
+
+
     def check_replicas(self):
         while True:
             if self.leader_details not in self.connected_replicas and len(self.connected_replicas)>0:
@@ -72,6 +96,8 @@ class CentralNodeService(rpyc.Service):
                 print("Looks like the leader replica got removed")
                 self.elect_new_leader()
             
+            self.copy_stuff_to_new_replicas()
+
             for replica in self.connected_replicas:
                 try:
                     replica_conn = rpyc.connect(replica["ip"], replica["port"])
@@ -82,6 +108,7 @@ class CentralNodeService(rpyc.Service):
                     print(f"Number of connected replicas is:", len(self.connected_replicas))
             time.sleep(2)
 
+    
 
 if __name__ == "__main__":
     # Start the central node server on port 8000
