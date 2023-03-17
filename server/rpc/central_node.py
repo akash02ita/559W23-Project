@@ -60,13 +60,18 @@ class CentralNodeService(rpyc.Service):
 
         if (len(self.connected_replicas)>0):
             self.leader_details = self.connected_replicas[0]
-            print(f"Successfully elected a new leader")
+            print(f"Successfully elected a new leader with details {self.leader_details}")
         else:
             self.leader_details = None
             print("No replica connected. Unable to elect a new leader.")
 
     def check_replicas(self):
         while True:
+            if self.leader_details not in self.connected_replicas and len(self.connected_replicas)>0:
+                # If the leader replica is not connected, elect a new leader
+                print("Looks like the leader replica got removed")
+                self.elect_new_leader()
+            
             for replica in self.connected_replicas:
                 try:
                     replica_conn = rpyc.connect(replica["ip"], replica["port"])
