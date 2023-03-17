@@ -4,11 +4,22 @@ import threading
 import time
 
 
+is_backup = False
+PRIMARY_CENTRAL_NODE_PORT = 8000
+BACKUP_CENTRAL_NODE_PORT = 8050
+
+
 class CentralNodeService(rpyc.Service):
-    def __init__(self):
-        self.connected_replicas = []
-        self.new_replicas = []
-        self.leader_details = { "ip": None, "port": None }
+    def __init__(self, replica_info):
+        if replica_info is None:
+            self.connected_replicas = []
+            self.new_replicas = []
+            self.leader_details = { "ip": None, "port": None }
+        else:
+            self.connected_replicas = replica_info[0]
+            self.new_replicas = replica_info[1]
+            self.leader_details = replica_info[2]
+
         self.check_replicas_thread = threading.Thread(target=self.check_replicas, daemon=True)
         self.check_replicas_thread.start()
 
@@ -57,6 +68,9 @@ class CentralNodeService(rpyc.Service):
         replica_conn = rpyc.connect(replica["ip"], replica["port"])
         return replica_conn.root.get_list_from_replica()
 
+    def exposed_get_replica_details(self):
+        return [self.connected_replicas, self.new_replicas, self.leader_details]
+
     # Function for leader election
     def elect_new_leader(self):
         print("Trying to elect a new leader")
@@ -90,6 +104,7 @@ class CentralNodeService(rpyc.Service):
 
 
     def check_replicas(self):
+        central_node_stuff = None
         while True:
             if self.leader_details not in self.connected_replicas and len(self.connected_replicas)>0:
                 # If the leader replica is not connected, elect a new leader
@@ -108,9 +123,50 @@ class CentralNodeService(rpyc.Service):
                     print(f"Number of connected replicas is:", len(self.connected_replicas))
             time.sleep(2)
 
-    
+class BackupCentralNode(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.running = False
+
+    def run(self):
+        self.running = True
+        self.central_node_stuff = None
+        while self.running:
+            try:
+                print("Primary central still running")
+                conn = rpyc.connect("localhost", PRIMARY_CENTRAL_NODE_PORT)
+                self.central_node_stuff = conn.root.get_replica_details()
+                print(self.central_node_stuff)
+                conn.close()
+            except ConnectionRefusedError:
+                print("Primary central node not running, starting backup central node")
+                backup_server = ThreadedServer(CentralNodeService(replica_info=self.central_node_stuff), port=PRIMARY_CENTRAL_NODE_PORT)
+                backup_server.start()
+                break
+            time.sleep(1)
+
+    def stop(self):
+        self.running = False
+
+
 
 if __name__ == "__main__":
     # Start the central node server on port 8000
-    t = ThreadedServer(CentralNodeService(), port=8000)
-    t.start()
+        is_backup = True
+
+        if is_backup:
+            print("works")
+            backup_node = BackupCentralNode()
+            backup_node.start()
+
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                backup_node.stop
+
+        else:
+
+            primary_node = ThreadedServer(CentralNodeService(replica_info=None), port=8000)
+            primary_node.start()
