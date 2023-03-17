@@ -2,9 +2,11 @@ import rpyc
 from rpyc.utils.server import ThreadedServer
 
 
+
 class CentralNodeService(rpyc.Service):
     def __init__(self):
         self.connected_replicas = []
+        self.leader_details = { "ip": None, "port": None }
 
     # For accepting a new replica connection
     def exposed_register_replica(self, replica_ip, replica_port):
@@ -14,14 +16,12 @@ class CentralNodeService(rpyc.Service):
             f"Now we have {len(self.connected_replicas)} replicas connected to central node"
         )
 
-    # We can look into this afterwards, not a core requirement
-    # # For finding and disconnection froma given replica
-    # def exposed_remove_replica(self, replica_ip):
-    #     # Find and disconnect the replica node with the given IP
-    #     for replica_conn in self.connected_replicas:
-    #         if replica_conn._config["endpoints"][0][0] == replica_ip:
-    #             replica_conn.close()
-    #             self.connected_replicas.remove(replica_conn)
+        # Whenever we have the first connection 
+        # It's automatically chosen as the leader
+        if len(self.connected_replicas) == 1:
+            self.leader_details["ip"] = replica_ip
+            self.leader_details["port"] = replica_port
+
 
     # Function to upload a given file
     def exposed_upload_file(self, filename, data):
@@ -39,16 +39,16 @@ class CentralNodeService(rpyc.Service):
         if len(self.connected_replicas) == 0:
             return ""
 
-        # Otherwise just return it from the first replica in the list
-        replica = self.connected_replicas[0]
+        # Otherwise just return it from the leader replica
+        replica = self.leader_details
         replica_conn = rpyc.connect(replica["ip"], replica["port"])
         file_data = replica_conn.root.download_from_replica(filename)
         return file_data
 
     # Function to get list of all the files on the replicas
-    # As for now, data is identical around replicas, we use just the first replica
+    # As for now, data is identical around replicas, we use just use the leader replica
     def exposed_get_list(self):
-        replica = self.connected_replicas[0]
+        replica = self.leader_details
         replica_conn = rpyc.connect(replica["ip"], replica["port"])
         return replica_conn.root.get_list_from_replica()
 
