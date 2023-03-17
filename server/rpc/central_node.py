@@ -1,12 +1,15 @@
 import rpyc
 from rpyc.utils.server import ThreadedServer
-
+import threading
+import time
 
 
 class CentralNodeService(rpyc.Service):
     def __init__(self):
         self.connected_replicas = []
         self.leader_details = { "ip": None, "port": None }
+        self.check_replicas_thread = threading.Thread(target=self.check_replicas, daemon=True)
+        self.check_replicas_thread.start()
 
     # For accepting a new replica connection
     def exposed_register_replica(self, replica_ip, replica_port):
@@ -61,6 +64,18 @@ class CentralNodeService(rpyc.Service):
         else:
             self.leader_details = None
             print("No replica connected. Unable to elect a new leader.")
+
+    def check_replicas(self):
+        while True:
+            for replica in self.connected_replicas:
+                try:
+                    replica_conn = rpyc.connect(replica["ip"], replica["port"])
+                    replica_conn.ping()
+                except:
+                    print(f"Replica {replica['ip']}:{replica['port']} is not respoding. Removing it.")
+                    self.connected_replicas.remove(replica)
+                    print(f"Number of connected replicas is:", len(self.connected_replicas))
+            time.sleep(2)
 
 
 if __name__ == "__main__":
