@@ -2,7 +2,7 @@ import rpyc
 from rpyc.utils.server import ThreadedServer
 import threading
 import time
-
+import subprocess
 
 is_backup = False
 PRIMARY_CENTRAL_NODE_PORT = 8000
@@ -10,8 +10,9 @@ BACKUP_CENTRAL_NODE_PORT = 8050
 
 
 class CentralNodeService(rpyc.Service):
-    def __init__(self):
-        self.connected_replicas = []
+    def __init__(self, existing_replicas = []):
+        print(f"existing replicas are {existing_replicas}")
+        self.connected_replicas = existing_replicas
         self.new_replicas = []
         self.leader_details = { "ip": None, "port": None }
 
@@ -111,6 +112,7 @@ class CentralNodeService(rpyc.Service):
     def check_replicas(self):
         central_node_stuff = None
         while True:
+            if self.connected_replicas is None: continue
             if self.leader_details not in self.connected_replicas and len(self.connected_replicas)>0:
                 # If the leader replica is not connected, elect a new leader
                 print("Looks like the leader replica got removed")
@@ -148,9 +150,11 @@ class BackupCentralNode(threading.Thread):
                 print("Primary central node not running, starting backup central node")
                 self.check_replicas_thread = threading.Thread(target=self.send_stuff_to_central_node, daemon=True)
                 self.check_replicas_thread.start()
-                backup_server = ThreadedServer(CentralNodeService(), port=PRIMARY_CENTRAL_NODE_PORT)
-                backup_server.start()
-                break
+                # issue: executing a ThreadedServer inside a ThreadedServer may be causing unexpected behaviour
+                # backup_server = ThreadedServer(CentralNodeService(), port=PRIMARY_CENTRAL_NODE_PORT)
+                # backup_server.start()
+                # rather create a new process to re-run central node on SAME port
+                subprocess.run(['python3', f"{sys.argv[0]}", 'false']) # run same file (with arg false -- which means run it as central node and not as backup)
             time.sleep(1)
 
     def send_stuff_to_central_node(self):
@@ -164,10 +168,12 @@ class BackupCentralNode(threading.Thread):
         self.running = False
 
 
-
+import sys
 if __name__ == "__main__":
     # Start the central node server on port 8000
-        is_backup = True
+        is_backup = False
+        if len(sys.argv) >= 2:
+            is_backup = sys.argv[1].lower() == "true"
 
         if is_backup:
             print("works")
