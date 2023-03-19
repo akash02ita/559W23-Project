@@ -2,12 +2,10 @@ import rpyc
 from rpyc.utils.server import ThreadedServer
 import threading
 import time
-import subprocess
 
 is_backup = False
 PRIMARY_CENTRAL_NODE_PORT = 8000
 BACKUP_CENTRAL_NODE_PORT = 8050
-
 
 class CentralNodeService(rpyc.Service):
     def __init__(self, existing_replicas = []):
@@ -66,19 +64,11 @@ class CentralNodeService(rpyc.Service):
         replica_conn = rpyc.connect(replica["ip"], replica["port"])
         return replica_conn.root.get_list_from_replica()
 
-    # def exposed_get_replica_details(self):
-    #     return {
-    #         "connected_replicas":  self.connected_replicas,
-    #         "new_replicas": self.new_replicas,
-    #         "leader_details": self.leader_details
-    #     }
 
+    # TODO: add the new_replicas info too here
     def exposed_get_replica_details(self):
         return self.connected_replicas
     
-    def exposed_set_replica_details(self, connected_replicas):
-        self.connected_replicas = connected_replicas
-        return "success"
     
     # Function for leader election
     def elect_new_leader(self):
@@ -115,8 +105,6 @@ class CentralNodeService(rpyc.Service):
     def check_replicas(self):
         central_node_stuff = None
         while True:
-            # print("central node the replicas connecte are ", self.connected_replicas)
-            # time.sleep(2)
             if self.connected_replicas is None: continue
             if len(self.connected_replicas) == 0: continue
             if self.leader_details not in self.connected_replicas and len(self.connected_replicas)>0:
@@ -160,7 +148,6 @@ class BackupCentralNode(threading.Thread):
                     print(self.central_node_stuff)
                 except Exception:
                     print("Connected replicas fetch list failing")
-                # self.central_node_stuff = conn.root.get_replica_details()
                 conn.close() # if array is accesed after closing or having lost connection and not deep copied -> ERROR
                 try:
                     print(type(self.central_node_stuff))
@@ -169,54 +156,12 @@ class BackupCentralNode(threading.Thread):
                     print("List failing to print")
             except ConnectionRefusedError:
                 print("Primary central node not running, backup node TAKING OVER as central node")
-                # issue: executing a ThreadedServer inside a ThreadedServer may be causing unexpected behaviour -> not sure about its
-                # maybe Threadserver in Threadserver is completely fine. However, issue could be the fact that array self.central_node_stuff was not DEEP COPIED!
                 backup_server = ThreadedServer(CentralNodeService(self.central_node_stuff), port=PRIMARY_CENTRAL_NODE_PORT)
                 backup_server.start()
-
-                # subprocess fix not needed anymore as issue has been fixed
-                # rather create a new process to re-run central node on SAME port (create a new process without waiting)
-                # time.sleep(1)
-                # subprocess.Popen(['python3', f"{sys.argv[0]}", 'false']) # run same file (with arg false -- which means run it as central node and not as backup)
-                
-                # MAX_ATTEMPTS = 5 # SOLUTION1: send connected replicas to central node -> not needed anymore. ojbect passed in constructor
-                # while MAX_ATTEMPTS:
-                #     time.sleep(2) # allow 2 seconds for central node to be setup again
-                #     if self.send_stuff_to_central_node(): break
-                #     MAX_ATTEMPTS -= 1
-
-                # try: # SOLUTION2: notify replicas to reconnect to central node -> not needed anymore for same reason.
-                #     arr= self.central_node_stuff
-                #     print("Arrays is ", arr) # uncomment this and above line. It will crash.
-                # except Exception:
-                #     input("Something wrong happened")
-                # for replica in self.central_node_stuff:
-                #     print("Backup node notifying replica", replica, "for restarting central ndoe")
-                #     replica_conn = rpyc.connect(replica["ip"], replica["port"])
-                #     replica_conn.close()
             except Exception:
                 print("Some other error occured!")
 
             time.sleep(1)
-
-    """
-    not needed anymore but here for future pruposes
-    def send_stuff_to_central_node(self):
-        try:
-            connection = rpyc.connect("localhost", PRIMARY_CENTRAL_NODE_PORT)
-            print("Connection established")
-            arr = self.central_node_stuff if self.central_node_stuff is not None else []
-            response = connection.root.set_replica_details(arr)
-            print("Backup node successfully sent stuff to central node. Here the response")
-            print(response)
-            connection.close()
-            time.sleep(1)
-            return True
-        except Exception:
-            print("Backup node failed to send stuff to central node")
-            return False
-    """
-
 
     def stop(self):
         self.running = False
