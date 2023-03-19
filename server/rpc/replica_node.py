@@ -27,6 +27,22 @@ class ReplicaNodeService(rpyc.Service):
         self.storage_locations = [
             f"{FOLDER_PATH}/" # / added at the end
         ]
+    """ code not being used but kept here for future. A missing step regarding deep copy of remote objects has been solved and now should not be a problem.
+    def exposed_central_node_died():
+        print(f"replica node at port {replica_node_port} is notified for dead central node.\n Reattempt connection")
+        while True:
+            try:
+                print("replica node at port {replica_node_port} Making connection to the central node\n")
+                central_node_connection = rpyc.connect(central_node_ip, central_node_port)
+                print("replica node at port {replica_node_port} Connection successful\n")
+                break
+            except Exception:
+                import time
+                time.sleep(1)
+                print(f"replica node at port {replica_node_port} failed connected. reattempting")
+                continue
+        return "success"
+    """
 
     def exposed_upload_to_replica(self, filename, data):
         print(f"tried to upload yeah {type(filename)}")
