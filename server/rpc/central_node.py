@@ -2,12 +2,10 @@ import rpyc
 from rpyc.utils.server import ThreadedServer
 import threading
 import time
-import subprocess
 
 is_backup = False
 PRIMARY_CENTRAL_NODE_PORT = 8000
 BACKUP_CENTRAL_NODE_PORT = 8050
-
 
 class CentralNodeService(rpyc.Service):
     def __init__(self, existing_replicas = []):
