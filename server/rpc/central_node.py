@@ -19,6 +19,7 @@ class CentralNodeService(rpyc.Service):
         self.check_replicas_thread = threading.Thread(target=self.check_replicas, daemon=True)
         self.check_replicas_thread.start()
 
+
     # For accepting a new replica connection
     def exposed_register_replica(self, replica_ip, replica_port):
         print("Central node detects a replica connecting from port", replica_port, replica_ip)
@@ -34,6 +35,7 @@ class CentralNodeService(rpyc.Service):
         # It means it's a replica after the first one has connected
         else:
             self.new_replicas.append({"ip": replica_ip, "port": replica_port})
+
 
     # Function to upload a given file
     def exposed_upload_file(self, filename, data):
