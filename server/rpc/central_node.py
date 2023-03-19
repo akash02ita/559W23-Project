@@ -65,12 +65,10 @@ class CentralNodeService(rpyc.Service):
         return replica_conn.root.get_list_from_replica()
 
 
+    # TODO: add the new_replicas info too here
     def exposed_get_replica_details(self):
         return self.connected_replicas
     
-    def exposed_set_replica_details(self, connected_replicas):
-        self.connected_replicas = connected_replicas
-        return "success"
     
     # Function for leader election
     def elect_new_leader(self):
