@@ -1,6 +1,7 @@
 import rpyc
 from rpyc.utils.server import ThreadedServer
 import os
+import hashlib
 
 # May change these variables afterwards
 central_node_ip = "localhost"
@@ -52,7 +53,13 @@ class ReplicaNodeService(rpyc.Service):
         with open(file_location, "wb+") as f:
             f.write(data)
 
-        return str.encode(f"The file '{filename}' has been successfully uploaded")
+        file_hash = None
+        with open(file, "rb") as file:
+            contents_stored = file.read()
+            # Getting the hash
+            file_hash = hashlib.sha256(contents_stored).hexdigest()
+
+        return file_hash
 
     def exposed_download_from_replica(self, filename: str):
         file_location = self.get_storage_location(filename) + filename
