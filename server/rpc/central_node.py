@@ -2,6 +2,7 @@ import rpyc
 from rpyc.utils.server import ThreadedServer
 import threading
 import time
+import hashlib
 
 is_backup = False
 PRIMARY_CENTRAL_NODE_PORT = 8000
@@ -37,11 +38,27 @@ class CentralNodeService(rpyc.Service):
 
     # Function to upload a given file
     def exposed_upload_file(self, filename, data):
+        # First get the hash of data that we need to store on replicas
+        # Getting the hash
+        file_sha = hashlib.sha256(data).hexdigest()
+        print('The file sha is ', file_sha)
+
+        print("Uploading the file from central node to all the connected replicas")
         # Upload a file to all connected replicas
         for replica in self.connected_replicas:
             print("Central node sending to replica port", replica["port"])
             replica_conn = rpyc.connect(replica["ip"], replica["port"])
-            replica_conn.root.upload_to_replica(filename, data)
+            while True:
+                try:
+                    replica_response = replica_conn.root.upload_to_replica(filename, data)
+                    print("the replica response is ", replica_response)
+                except Exception:
+                    print("Failed to upload the file this time")
+                
+                # If the hashes match (this means that copying has been done correctly)
+                # i.e. consistency has been ensured
+                if replica_response == file_sha:
+                    break
 
         return str.encode(f"The file '{filename}' has been successfully uploaded")
 

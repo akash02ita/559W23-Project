@@ -54,7 +54,7 @@ class ReplicaNodeService(rpyc.Service):
             f.write(data)
 
         file_hash = None
-        with open(file, "rb") as file:
+        with open(file_location, "rb") as file:
             contents_stored = file.read()
             # Getting the hash
             file_hash = hashlib.sha256(contents_stored).hexdigest()
