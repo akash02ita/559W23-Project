@@ -2,6 +2,7 @@ import './App.css';
 import styled from 'styled-components';
 import { BsUpload } from 'react-icons/bs'
 import Tablefiles from "./components/Tablefiles.js"
+import Header from './components/Header';
 
 
 
@@ -12,18 +13,8 @@ function uploadFn(){
 function App() {
   return (
     <>
-      <div className="App">
-        <div>
-          <h1 id='headerTxt'> DFS-D</h1>
-            <footer id="footerInHeader"> Distributed File System - Drive</footer>
-        </div>
-          
-        <div>
-          <input type="text" className='SearchBar' placeholder='Search...' />
-        </div>
-
-      </div>
-
+      
+      <Header />
       <div className='ButtonRow'>
         <div>
           <main>
