@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { BsUpload } from 'react-icons/bs'
 import Tablefiles from "./components/Tablefiles.js"
 import Header from './components/Header';
+import AddMenu from './components/AddMenu';
 
 
 
@@ -15,6 +16,7 @@ function App() {
     <>
       
       <Header />
+      <AddMenu />
       <div className='ButtonRow'>
         <div>
           <main>
