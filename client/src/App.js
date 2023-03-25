@@ -15,20 +15,10 @@ function App() {
   return (
     <>
       
-      <Header />
-      <AddMenu />
-      <div className='ButtonRow'>
-        <div>
-          <main>
-            <form onClick={ () => document.querySelector(".input-field").click()}>
-              <input type="file" accept='image/*' className='input-field' hidden />
+      <Header/>
 
-              <BsUpload size={36} className='uploadButton'/>
-
-            </form>
-          
-          </main>
-        </div>
+      <div style={{display: 'flex', justifyContent: 'center', marginTop: "1em"}}>
+        <AddMenu />
       </div>
 
       <Tablefiles />
