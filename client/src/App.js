@@ -8,23 +8,27 @@ import sample_data from './data/data.json'
 
 
 
-function uploadFn(){
+function uploadFn() {
   alert('Upload Button was clicked');
 }
 
 function App() {
   return (
     <>
-      
-      <Header/>
 
-      <div style={{display: 'flex', justifyContent: 'center', marginTop: "1em"}}>
+      <Header />
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: "1em" }}>
         <AddMenu />
       </div>
+      <div style={{ width: "80%" }}>
+        <Tablefiles data={sample_data} mode="home" />
+      </div>
+      <div style={{ width: "50%" }}>
+        <Tablefiles data={sample_data} mode="fileupload" />
+      </div>
 
-      <Tablefiles data={sample_data}/>
-
-    </> 
+    </>
   );
 }
 
