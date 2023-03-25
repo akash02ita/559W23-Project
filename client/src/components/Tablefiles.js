@@ -7,7 +7,7 @@ import GetIcon from '../utils/GetIcon.js'
 // checkcirclefill: when row is selected
 import { Circle, CheckCircle, CheckCircleFill } from 'react-bootstrap-icons'
 import { Eye, Download, Trash } from 'react-bootstrap-icons'
-import { ButtonGroup, Button } from 'react-bootstrap'
+import { ButtonGroup, Button, Breadcrumb } from 'react-bootstrap'
 import { useState } from 'react'
 
 function downloadFn() {
@@ -51,10 +51,10 @@ function Tablefiles({ data }) {
         // TODO: add 3 dot button on side
         if (isRowHovered(index) || isRowSelected(index)) return (
           <ButtonGroup>
-          <Button variant="outline-primary"><Eye size={25} /></Button>
-          <Button variant='outline-success'><Download size={25} /></Button>
-          <Button variant="outline-danger"><Trash size={25} /></Button>
-        </ButtonGroup>
+            <Button variant="outline-primary"><Eye size={25} /></Button>
+            <Button variant='outline-success'><Download size={25} /></Button>
+            <Button variant="outline-danger"><Trash size={25} /></Button>
+          </ButtonGroup>
         );
         // ensure that if no butotn group is selected the size still matches. Otherwise suddent growth in size is odd.
         // this is ensure using col-2 classname in td
@@ -82,13 +82,22 @@ function Tablefiles({ data }) {
 
 
   // sum of col-* is 12 to follow boostrap convention
+  // https://getbootstrap.com/docs/5.3/utilities/colors/   these sources for breadcrumb color picking
+  // https://getbootstrap.com/docs/5.3/utilities/background
+  // TODO: in custom styling remove hyperlink underlines. On hover show blue link. otherwise just like as if it is 'active' breadcrumb.item
+  // TODO: in custom styling try to put the separator between items and not inside the item (just like on figma)
+  // TODO: in cusotm styling try to make the bordered rectangales in breadcrumb.item slightly dark grey background (like on figma)
   return (
     <div className='table-container'>
-      <h1 className='myFilesHeader'> My Files</h1>
+      <Breadcrumb className='fs-3'>
+        <Breadcrumb.Item href='#' className='border rounded-5 px-3 py-1 bg-light text-secondary'>Root</Breadcrumb.Item>
+        <Breadcrumb.Item href='prevfolder' className='border rounded-5 px-3 py-1 bg-light text-secondary'>prevfolder</Breadcrumb.Item>
+        <Breadcrumb.Item active className='px-3 py-1 text-dark fw-bold'>currentfolder</Breadcrumb.Item>
+      </Breadcrumb>
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th className='col-1' style={{width: "5%"}}></th>
+            <th className='col-1' style={{ width: "5%" }}></th>
             <th className='col-1'>Type</th>
             <th className='col-2'>Name</th>
             <th className='col-3'>Last Modified</th>
