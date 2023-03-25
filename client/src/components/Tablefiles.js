@@ -63,7 +63,7 @@ function Tablefiles({ data }) {
       return (
         <tr key={index}
           onMouseEnter={() => handleRowHover(index)}
-          onMouseLeave={() => handleRowUnHover(index)}
+          onMouseLeave={() => {handleRowUnHover(index); handleUnHoverTickMark(index)}}
           onClick={() => handleRowClick(index)}
         >
           <td className='text-center'> {putCheckMark(index)} </td>
