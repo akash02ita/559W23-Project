@@ -3,10 +3,10 @@ import { Navbar, Nav, Form, FormControl, Button, InputGroup } from 'react-bootst
 import { Search, Funnel } from 'react-bootstrap-icons'
 function Header() {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="navBarcolor" expand="lg">
       <Navbar.Brand href="#home">
         <h1>DFS-D</h1>
-        <h3>Distributed File System - Drive</h3>
+        <h4>Distributed File System - Drive</h4>
       </Navbar.Brand>
       
       <div className="w-50 p-3">
