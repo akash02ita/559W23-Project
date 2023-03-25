@@ -66,13 +66,13 @@ function Tablefiles({ data }) {
           onMouseLeave={() => handleRowUnHover(index)}
           onClick={() => handleRowClick(index)}
         >
-          <td> {putCheckMark(index)} </td>
+          <td className='text-center'> {putCheckMark(index)} </td>
           <td> <GetIcon fname={fname} size={30} type={fprops.type} /> </td>
           <td>{fname}</td>
           <td>{fprops.last_modified}</td>
           <td>{fprops.last_modified_by}</td>
           <td>{fprops.size} B</td>
-          <td className='col-2'>{putActions(index)}</td>
+          <td>{putActions(index)}</td>
         </tr>
       );
     });
@@ -81,19 +81,20 @@ function Tablefiles({ data }) {
   }
 
 
+  // sum of col-* is 12 to follow boostrap convention
   return (
     <div className='table-container'>
       <h1 className='myFilesHeader'> My Files</h1>
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Select</th>
-            <th>Type</th>
-            <th>Name</th>
-            <th>Last Modified</th>
-            <th>Last Modified By</th>
-            <th>Size</th>
-            <th>Action</th>
+            <th className='col-1' style={{width: "5%"}}></th>
+            <th className='col-1'>Type</th>
+            <th className='col-2'>Name</th>
+            <th className='col-3'>Last Modified</th>
+            <th className='col-2'>Last Modified By</th>
+            <th className='col-1'>Size</th>
+            <th className='col-2'>Action</th>
           </tr>
         </thead>
         <tbody>
