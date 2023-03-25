@@ -26,20 +26,26 @@ function Tablefiles({ data }) {
   const [selectedRows, setSelectedRows] = useState([]);
   const [hovereredRows, setHovereredRows] = useState([]);
 
-  const handleRowSelect = (index) => setSelectedRows((prev) => [...prev, index]);
-  const handleRowUnSelect = (index) => setSelectedRows((prev) => prev.filter((i) => i !== index));
-  const handleRowHover = (index) => !isRowHovered(index) ? setHovereredRows((prev) => [...prev, index]) : undefined;
-  const handleRowUnHover = (index) => isRowHovered(index) ? setHovereredRows((prev) => prev.filter((i) => i !== index)) : undefined;
-  const isRowSelected = (index) => selectedRows.includes(index);
-  const isRowHovered = (index) => hovereredRows.includes(index);
-  const handleRowClick = (index) => isRowSelected(index) ? handleRowUnSelect(index) : handleRowSelect(index);
+  const handleRowSelect = (i) => setSelectedRows((prev) => [...prev, i]);
+  const handleRowUnSelect = (i) => setSelectedRows((prev) => prev.filter((iprev) => iprev !== i));
+  const handleRowHover = (i) => !isRowHovered(i) ? setHovereredRows((prev) => [...prev, i]) : undefined;
+  const handleRowUnHover = (i) => isRowHovered(i) ? setHovereredRows((prev) => prev.filter((iprev) => iprev !== i)) : undefined;
+  const isRowSelected = (i) => selectedRows.includes(i);
+  const isRowHovered = (i) => hovereredRows.includes(i);
+  const handleRowClick = (i) => isRowSelected(i) ? handleRowUnSelect(i) : handleRowSelect(i);
+
+  const [hoveredTickMarks, setHovereredTickMarks] = useState([]);
+  const handleHoverTickMark = (i) => !isTickMarkHovered(i) ? setHovereredTickMarks((prev) => [...prev, i]) : undefined;
+  const handleUnHoverTickMark = (i) => isTickMarkHovered(i) ? setHovereredTickMarks((prev) => prev.filter((iprev) => iprev !== i)) : undefined;;
+  const isTickMarkHovered = (i) => hoveredTickMarks.includes(i);
 
   const renderData = () => {
     const rows = Object.entries(jsondata).map(([fname, fprops], index) => {
       console.log("data index is", index, "with fname", fname, "and fprops", fprops);
       const putCheckMark = (index) => {
         if (isRowSelected(index)) return <CheckCircleFill size={20} />;
-        if (isRowHovered(index)) return <Circle size={20} />;
+        if (isTickMarkHovered(index)) return <CheckCircle size={20} onMouseLeave={() => handleUnHoverTickMark(index)} />;
+        if (isRowHovered(index)) return <Circle size={20} onMouseEnter={() => handleHoverTickMark(index)} />;
         return <></>; // do not put anything otherwise
       }
       return (
