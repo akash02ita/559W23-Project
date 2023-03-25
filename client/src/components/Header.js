@@ -8,11 +8,14 @@ function Header() {
         <h1>DFS-D</h1>
         <h3>Distributed File System - Drive</h3>
       </Navbar.Brand>
+      
+      <div className="w-50 p-3">
       <InputGroup>
       <InputGroup.Text><Search /></InputGroup.Text>
-      <FormControl type="text" placeholder="Search" />
+      <FormControl type="text" placeholder="Search"/>
       <InputGroup.Text><Funnel /></InputGroup.Text>
       </InputGroup>
+      </div>
     </Navbar>
   )
 }
