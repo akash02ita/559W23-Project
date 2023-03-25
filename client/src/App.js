@@ -4,6 +4,7 @@ import { BsUpload } from 'react-icons/bs'
 import Tablefiles from "./components/Tablefiles.js"
 import Header from './components/Header';
 import AddMenu from './components/AddMenu';
+import sample_data from './data/data.json'
 
 
 
@@ -21,7 +22,7 @@ function App() {
         <AddMenu />
       </div>
 
-      <Tablefiles />
+      <Tablefiles data={sample_data}/>
 
     </> 
   );

@@ -1,6 +1,6 @@
 import { Folder,  FileEarmarkImage, FiletypeTxt, FileEarmarkPdf, FiletypeMp4} from "react-bootstrap-icons";
 
-function GetIcon({ fname, size }) {
+function GetFileIcon({ fname, size }) {
     console.log("utils: getFileIcon: fname is ", fname);
     const arr = fname.split('.');
     if (arr.length == 1) {
@@ -32,6 +32,14 @@ function GetIcon({ fname, size }) {
             console.log("utils: getFileIcon: failed: default no icon for extension", ext);
             return <></>
     }
+}
+
+function GetIcon({ fname, type, size}) {
+    if (type == "file") {
+        return (<GetFileIcon fname={fname} size={size} />);
+    }
+    console.log("utils: GetIcon: type", type, "not supported yet");
+    return <></>
 }
 
 export default GetIcon;
