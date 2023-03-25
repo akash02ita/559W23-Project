@@ -1,7 +1,4 @@
 import Table from 'react-bootstrap/Table'
-import { BsFiletypeTxt, BsDownload, BsTrash } from 'react-icons/bs'
-import { FiEye } from 'react-icons/fi'
-import { BiCheckbox } from 'react-icons/bi'
 import GetIcon from '../utils/GetIcon.js'
 
 // nothing: when not hovering on row and row is not selected
@@ -9,6 +6,8 @@ import GetIcon from '../utils/GetIcon.js'
 // checkcircle: when hovering on circle
 // checkcirclefill: when row is selected
 import { Circle, CheckCircle, CheckCircleFill } from 'react-bootstrap-icons'
+import { Eye, Download, Trash } from 'react-bootstrap-icons'
+import { ButtonGroup, Button } from 'react-bootstrap'
 import { useState } from 'react'
 
 function downloadFn() {
@@ -48,11 +47,24 @@ function Tablefiles({ data }) {
         if (isRowHovered(index)) return <Circle size={20} onMouseEnter={() => handleHoverTickMark(index)} />;
         return <></>; // do not put anything otherwise
       }
+      const putActions = (index) => {
+        // TODO: add 3 dot button on side
+        if (isRowHovered(index) || isRowSelected(index)) return (
+          <ButtonGroup>
+          <Button variant="outline-primary"><Eye size={25} /></Button>
+          <Button variant='outline-success'><Download size={25} /></Button>
+          <Button variant="outline-danger"><Trash size={25} /></Button>
+        </ButtonGroup>
+        );
+        // ensure that if no butotn group is selected the size still matches. Otherwise suddent growth in size is odd.
+        // this is ensure using col-2 classname in td
+        return <></>;
+      }
       return (
-        <tr key={index}  
+        <tr key={index}
           onMouseEnter={() => handleRowHover(index)}
           onMouseLeave={() => handleRowUnHover(index)}
-          onClick={() => handleRowClick(index)} 
+          onClick={() => handleRowClick(index)}
         >
           <td> {putCheckMark(index)} </td>
           <td> <GetIcon fname={fname} size={30} type={fprops.type} /> </td>
@@ -60,11 +72,7 @@ function Tablefiles({ data }) {
           <td>{fprops.last_modified}</td>
           <td>{fprops.last_modified_by}</td>
           <td>{fprops.size} B</td>
-          <td>
-            <FiEye></FiEye>
-            <BsDownload></BsDownload>
-            <BsTrash></BsTrash>
-          </td>
+          <td className='col-2'>{putActions(index)}</td>
         </tr>
       );
     });
