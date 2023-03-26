@@ -17,7 +17,17 @@ class CentralNodeService(rpyc.Service):
 
         self.check_replicas_thread = threading.Thread(target=self.check_replicas, daemon=True)
         self.check_replicas_thread.start()
+        self.critical_sections_filenames = {}
 
+    def acquire_filename_lock(self, fname: str):
+        if fname not in self.critical_sections_filenames:
+            self.critical_sections_filenames[fname] = threading.Lock()
+        self.critical_sections_filenames[fname].acquire(blocking=True)
+        return True
+    def release_filename_lock(self, fname: str):
+        if fname in self.critical_sections_filenames:
+            self.critical_sections_filenames[fname].release()
+        return True
 
     # For accepting a new replica connection
     def exposed_register_replica(self, replica_ip, replica_port):
@@ -43,6 +53,10 @@ class CentralNodeService(rpyc.Service):
         file_sha = hashlib.sha256(data).hexdigest()
         print('The file sha is ', file_sha)
 
+        print(f"Acquiring lock for file {filename}. Sha is {file_sha}")
+        self.acquire_filename_lock(filename)
+        print(f"Lock to file {filename} acquired successfully. Sha is {file_sha}")
+
         print("Uploading the file from central node to all the connected replicas")
         # Upload a file to all connected replicas
         for replica in self.connected_replicas:
@@ -60,6 +74,10 @@ class CentralNodeService(rpyc.Service):
                 if replica_response == file_sha:
                     break
 
+        print(f"Releasing lock for file {filename}. Sha is {file_sha}")
+        self.release_filename_lock(filename)
+        print(f"Released successfuly lock for file {filename}. Sha is {file_sha}")
+        
         return str.encode(f"The file '{filename}' has been successfully uploaded")
 
     # Function to upload file with a given filename
