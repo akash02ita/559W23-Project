@@ -10,6 +10,7 @@ import { PlusSquareDotted } from 'react-bootstrap-icons';
 
 function FileUpload({ flag, setFlag }) {
   const [files, setFiles] = useState([]);
+  
   const getFilesJson = () => {
     console.log("files is ", files);
     const data = {};
@@ -35,8 +36,23 @@ function FileUpload({ flag, setFlag }) {
     // TODO: fetch api call for file upload
     // on success: back
     // on failure: danger alert for failure
+    // We don't have formData
+    if(!files) return;
+    console.log("upload files is", uploadFiles);
+    console.log("object entries uploadfiles", Object.entries(uploadFiles));
+    axios.post("uploaded_file", files);
+    axios.post("/uploadfile", formData, {headers :{
+      "Content-Type": "multipart/form-data",
+    }})
+    .then(res => {
+      console.log("Receive response for index", index);
+      console.log(res);
+      console.log(res.data);
+      updateTableData();
+    })  
     setFlag(false);
   };
+
   const handleCancel = () => {
     setFlag(false);
   }
