@@ -187,15 +187,28 @@ class CentralNodeService(rpyc.Service):
         while True:
             if self.connected_replicas is None: continue
             if len(self.connected_replicas) == 0: continue
+            all_replica_storage_details = {} # key = replica, # value = storage_details (key-value pairs of filename and hash)
+            all_files_details = {} # key = filename, # value = key-value pairs for filehash and frequency of hash
+            
+
             for replica in self.connected_replicas:
                 try:
                     replica_conn = rpyc.connect(replica["ip"], replica["port"])
                     storage_details = replica_conn.root.get_storage_details()
                     storage_details = ultra_max_pro_deep_copy(storage_details) # deep copy to ensure no loss if connection lost
+                    # TODO: upadte all_replia_storage_details
+                    # TODO: upadte all_files_details
                     replica_conn.close()
-                    print(f"From replica {replica} received storage details {storage_details}")
+                    print(f"From replica {replica} \n\treceived storage details {storage_details}")
                 except:
                     print(f"Synchronization request for replica {replica} failed.")
+            for replica in self.connected_replicas:
+                try:
+                    # TODO: check if replica has all files
+                    # TODO: check if replica has all files with hash matching
+                    pass
+                except:
+                    pass
             time.sleep(2)
 class BackupCentralNode(threading.Thread):
     def __init__(self):

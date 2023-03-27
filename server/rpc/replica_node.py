@@ -79,7 +79,28 @@ class ReplicaNodeService(rpyc.Service):
         return files_array
     
     def exposed_get_storage_details(self): # returns fields and hashnames key-value pairs
-        return self.storage_details
+        # return self.storage_details # EFFICIENT RETURN
+        # what if replica has file corruptions? Best to read every file in directory and compute hash (INEFFICIENT RETURN)
+        # this is an expensive operatoin but later the system can be optimized by switching between EFFICIENT AND INEFFICIENT return on regular interval. This will mantain both stability (can detect issues if a filename is missing or absent or improper hash code if file corrupt) and bandwidth efficiency over time
+        print(f"replica received storage details request")
+        storage_details = {}
+        try:
+            files = os.listdir(f"{FOLDER_PATH}")
+            print(f"Replica has files {files}")
+            for file_name in files:
+                # if file is a file and not a fodler
+                file_path = os.path.join(FOLDER_PATH, file_name)
+                # print(f"\tfilepath is {file_path}")
+                file_data = None
+                file_hash = None
+                with open(file_path, "rb") as f:
+                    file_data = f.read()
+                    file_hash = hashlib.sha256(file_data).hexdigest()
+                storage_details[file_name] = file_hash
+            return storage_details # after successful operation
+        except:
+            print(f"Replica failed giving storage details")
+            return self.storage_details # default return value
 
     def get_storage_location(self, filename: str):
         # Right now just storing at one location
