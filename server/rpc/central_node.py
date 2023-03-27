@@ -131,7 +131,22 @@ class CentralNodeService(rpyc.Service):
             list_of_files = leader_conn.root.get_list_from_replica()
             for file in list_of_files:
                 file_data = leader_conn.root.download_from_replica(file)
-                new_replica_conn.root.upload_to_replica(file, file_data)
+
+                file_sha = hashlib.sha256(file_data).hexdigest()
+                print('The file sha is ', file_sha)
+
+                while True:
+                    try:
+                        new_replica_response = new_replica_conn.root.upload_to_replica(file, file_data)
+                        print("the new replica response is ", new_replica_response)
+                    except Exception:
+                        print("Failed to upload the file to new_replica this time")
+                
+                    # If the hashes match (this means that copying has been done correctly)
+                    # i.e. consistency has been ensured
+                    if new_replica_response == file_sha:
+                        break
+                
 
             self.new_replicas.remove(new_replica)
             print("Copying finished")
