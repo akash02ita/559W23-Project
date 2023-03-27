@@ -243,8 +243,32 @@ class CentralNodeService(rpyc.Service):
                             replica_conn.close()
                             available_replica_conn.close()
 
-                    # TODO: check if replica has all files with hash matching
-                    pass
+                    # check if replica has all files with hash matching
+                    for filename in all_replica_files:
+                        hash_freq = list(all_files_details[filename].items())
+                        hash_freq.sort(key=lambda hf: -hf[1]) # sort by frequency in non-increasing order
+                        print(f"{filename}sorted hash_freq", hash_freq)
+                        most_common_hash = hash_freq[0][0] # 1st elemnt that has largest frequency
+
+                        replica_file_hash = all_replica_storage_details[get_replica_tuple_id(replica)][filename]
+                        if replica_file_hash != most_common_hash:
+                            print("hash is not matching for file", filename)
+                            print("Synchronizing with file with most common hash")
+                            # get replica that has matching hash
+                            available_replicas = [replica_tuple for replica_tuple in all_replica_storage_details if all_replica_storage_details[replica_tuple][filename] == most_common_hash]
+                            # pick the 1st available one
+                            available_replica = available_replicas[0]
+                            available_replica_conn = rpyc.connect(available_replica[0], available_replica[1])
+                            latest_file_data = available_replica_conn.root.download_from_replica(filename)
+
+                            # now send it to the replica that does not have the file
+                            replica_conn = rpyc.connect(replica["ip"], replica["port"])
+                            replica_conn.root.upload_to_replica(filename, latest_file_data)
+
+                            replica_conn.close()
+                            available_replica_conn.close()
+
+                        pass
                 except Exception as e:
                     print("Verification of replica files failed")
                     print(e)
