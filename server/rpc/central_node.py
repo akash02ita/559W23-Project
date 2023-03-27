@@ -181,6 +181,8 @@ class CentralNodeService(rpyc.Service):
     
     def synchronize_files(self):
         print(f"\t\t###### Synchronize files triggered ######")
+        def get_replica_tuple_id(replica):
+            return (replica["ip"], replica["port"])
         # get list of files and hashnames from every replica
         # update a replica if file is missing or not latest version
         # latest version is determined by verifying most frequent hashname
@@ -196,19 +198,56 @@ class CentralNodeService(rpyc.Service):
                     replica_conn = rpyc.connect(replica["ip"], replica["port"])
                     storage_details = replica_conn.root.get_storage_details()
                     storage_details = ultra_max_pro_deep_copy(storage_details) # deep copy to ensure no loss if connection lost
-                    # TODO: upadte all_replia_storage_details
-                    # TODO: upadte all_files_details
+                    # update: all_replia_storage_details
+                    replica_tuple = get_replica_tuple_id(replica)
+                    all_replica_storage_details[replica_tuple] = storage_details
+                    # upadte all_files_details
+                    for filename, file_hash in storage_details.items():
+                        if filename not in all_files_details:
+                            all_files_details[filename] = {}
+                        if file_hash not in all_files_details[filename]:
+                            all_files_details[filename][file_hash] = 0 # frequency
+                        all_files_details[filename][file_hash] += 1 # increment frequency = number of occurrences
+                        
                     replica_conn.close()
                     print(f"From replica {replica} \n\treceived storage details {storage_details}")
-                except:
+                except Exception as e:
                     print(f"Synchronization request for replica {replica} failed.")
+                    print(e)
+            
+            print(f"all_replica_storage_details {all_replica_storage_details}")
+            print(f"all_files_details {all_files_details}")
             for replica in self.connected_replicas:
                 try:
-                    # TODO: check if replica has all files
+                    # check if replica has all files
+                    all_files = set(all_files_details.keys())
+                    all_replica_files = set(all_replica_storage_details[get_replica_tuple_id(replica)].keys())
+                    print("all_files",all_files)
+                    print("all_replica_files",all_replica_files)
+                    print("Are they same", all_files == all_replica_files)
+                    print("Superset?", all_files > all_replica_files)
+                    if all_files > all_replica_files: # means superset
+                        absent_files = all_files - all_replica_files
+                        for absent_file in absent_files:
+                            # find replica that has the abset file
+                            available_replicas = [replica_tuple for replica_tuple in all_replica_storage_details if absent_file in all_replica_storage_details[replica_tuple]]
+                            # pick the 1st available one
+                            available_replica = available_replicas[0]
+                            available_replica_conn = rpyc.connect(available_replica[0], available_replica[1])
+                            absent_file_data = available_replica_conn.root.download_from_replica(absent_file)
+
+                            # now send it to the replica that does not have the file
+                            replica_conn = rpyc.connect(replica["ip"], replica["port"])
+                            replica_conn.root.upload_to_replica(absent_file, absent_file_data)
+
+                            replica_conn.close()
+                            available_replica_conn.close()
+
                     # TODO: check if replica has all files with hash matching
                     pass
-                except:
-                    pass
+                except Exception as e:
+                    print("Verification of replica files failed")
+                    print(e)
             time.sleep(2)
 class BackupCentralNode(threading.Thread):
     def __init__(self):
