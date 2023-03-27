@@ -4,6 +4,7 @@ import threading
 import time
 import hashlib
 
+from util import ultra_max_pro_deep_copy
 is_backup = False
 PRIMARY_CENTRAL_NODE_PORT = 8000
 BACKUP_CENTRAL_NODE_PORT = 8050
@@ -17,6 +18,10 @@ class CentralNodeService(rpyc.Service):
 
         self.check_replicas_thread = threading.Thread(target=self.check_replicas, daemon=True)
         self.check_replicas_thread.start()
+
+        self.synchronize_files_thread = threading.Thread(target=self.synchronize_files, daemon=True)
+        self.synchronize_files_thread.start()
+
         self.critical_sections_filenames = {}
 
     def acquire_filename_lock(self, fname: str):
@@ -173,7 +178,25 @@ class CentralNodeService(rpyc.Service):
                     self.connected_replicas.remove(replica)
                     print(f"Number of connected replicas is:", len(self.connected_replicas))
             time.sleep(2)
-
+    
+    def synchronize_files(self):
+        print(f"\t\t###### Synchronize files triggered ######")
+        # get list of files and hashnames from every replica
+        # update a replica if file is missing or not latest version
+        # latest version is determined by verifying most frequent hashname
+        while True:
+            if self.connected_replicas is None: continue
+            if len(self.connected_replicas) == 0: continue
+            for replica in self.connected_replicas:
+                try:
+                    replica_conn = rpyc.connect(replica["ip"], replica["port"])
+                    storage_details = replica_conn.root.get_storage_details()
+                    storage_details = ultra_max_pro_deep_copy(storage_details) # deep copy to ensure no loss if connection lost
+                    replica_conn.close()
+                    print(f"From replica {replica} received storage details {storage_details}")
+                except:
+                    print(f"Synchronization request for replica {replica} failed.")
+            time.sleep(2)
 class BackupCentralNode(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)

@@ -28,6 +28,8 @@ class ReplicaNodeService(rpyc.Service):
         self.storage_locations = [
             f"{FOLDER_PATH}/" # / added at the end
         ]
+        self.storage_details = {}
+
     """ code not being used but kept here for future. A missing step regarding deep copy of remote objects has been solved and now should not be a problem.
     def exposed_central_node_died():
         print(f"replica node at port {replica_node_port} is notified for dead central node.\n Reattempt connection")
@@ -58,7 +60,8 @@ class ReplicaNodeService(rpyc.Service):
             contents_stored = file.read()
             # Getting the hash
             file_hash = hashlib.sha256(contents_stored).hexdigest()
-
+        
+        self.storage_details[filename] = file_hash # keep track of storage info
         return file_hash
 
     def exposed_download_from_replica(self, filename: str):
@@ -74,6 +77,9 @@ class ReplicaNodeService(rpyc.Service):
     def exposed_get_list_from_replica(self):
         files_array = os.listdir(f"{FOLDER_PATH}")
         return files_array
+    
+    def exposed_get_storage_details(self): # returns fields and hashnames key-value pairs
+        return self.storage_details
 
     def get_storage_location(self, filename: str):
         # Right now just storing at one location
