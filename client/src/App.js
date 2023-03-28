@@ -2,9 +2,9 @@ import './App.css';
 import styled from 'styled-components';
 import { BsUpload } from 'react-icons/bs'
 import Tablefiles from "./components/Tablefiles.js"
+import Header from './components/Header';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
 
 
 function App() {
@@ -63,18 +63,7 @@ function App() {
   }, [])
   return (
     <>
-      <div className="App">
-        <div>
-          <h1 id='headerTxt'> DFS-D</h1>
-            <footer id="footerInHeader"> Distributed File System - Drive</footer>
-        </div>
-          
-        <div>
-          <input type="text" className='SearchBar' placeholder='Search...' />
-        </div>
-
-      </div>
-
+      <Header />
       <div className='ButtonRow'>
         <div>
           <main>
@@ -88,12 +77,6 @@ function App() {
               <button onClick={uploadFn}>Upload</button> {/* using button is better since onInput triggers before onChange (so empty files list is used instead)*/}
               </div>
 
-              {/* THIS FORM BELOW IS NOT USED ANYMORE */}
-              {/* <form action="/uploadfile/" encType="multipart/form-data" method="post">
-              <input name="uploaded_file" type="file" multiple />
-              <input type="submit" />
-              </form> */}
-          
           </main>
         </div>
       </div>

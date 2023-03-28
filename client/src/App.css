@@ -1,16 +1,5 @@
-.App {
-  display: flex; /*To make it a flexbox*/
-  min-height: 200;
-  min-width: 200;
-  color: black;
+.bg-navBarcolor{
   background-color: #85ACC2;
-  border-style: solid;
-  border-bottom-color: #0072C6;
-  border-left-color: #0072C6;
-  border-right-color: #0072C6;
-  border-top-color: #0072C6;
-  font-family: inter;
-  justify-content: auto;
 }
 
 #headerTxt{
