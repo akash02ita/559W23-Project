@@ -95,6 +95,10 @@ table {
   border-collapse: collapse;
 }
 
+.section {
+  border-top: 1em solid transparent;
+}
+
 th,
 td {
   border: 1px solid gray;

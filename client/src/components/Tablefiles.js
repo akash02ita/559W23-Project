@@ -62,7 +62,7 @@ function Tablefiles(props){
     return(
         <div className='table-container'>
         <h1 className='myFilesHeader'> My Files</h1>            
-        <table>
+        <table className='table'>
           <thead>
             <tr>
               <th>Select</th>  
