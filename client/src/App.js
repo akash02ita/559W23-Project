@@ -70,7 +70,7 @@ function App() {
             <div>
               <div onClick={() => document.querySelector(".input-field").click()}>
                 {/* <input type="file" accept='image/*' className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} onInput={uploadFn} multiple/> */}
-                <input type="file" accept='image/*' className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} multiple />
+                <input type="file" className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} multiple />
 
                 <BsUpload size={36} className='uploadButton' />
               </div>
