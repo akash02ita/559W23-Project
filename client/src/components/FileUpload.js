@@ -6,6 +6,7 @@ import Tablefiles from './Tablefiles.js'
 import { useDropzone } from 'react-dropzone';
 import Dropzone from 'react-dropzone';
 import { PlusSquareDotted } from 'react-bootstrap-icons';
+import axios from 'axios';
 
 
 function FileUpload({ flag, setFlag }) {
@@ -38,18 +39,21 @@ function FileUpload({ flag, setFlag }) {
     // on failure: danger alert for failure
     // We don't have formData
     if(!files) return;
-    console.log("upload files is", uploadFiles);
-    console.log("object entries uploadfiles", Object.entries(uploadFiles));
-    axios.post("uploaded_file", files);
-    axios.post("/uploadfile", formData, {headers :{
-      "Content-Type": "multipart/form-data",
-    }})
-    .then(res => {
-      console.log("Receive response for index", index);
-      console.log(res);
-      console.log(res.data);
-      updateTableData();
-    })  
+    console.log("upload files is", files);
+    console.log("object entries uploadfiles", Object.entries(files));
+
+    Object.entries(files).forEach(([index, upfile]) => {
+      console.log("What is upfile INDEX", index, "upfile", upfile)
+      const formData = new FormData();
+      formData.append("uploaded_file", upfile);
+      axios.post("/uploadfile", formData, {headers :{
+        "Content-Type": "multipart/form-data",
+      }})
+      .then(res => {
+        console.log("Receive response for index", index);
+        console.log(res);
+        console.log(res.data);
+    })})  
     setFlag(false);
   };
 
