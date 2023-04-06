@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import { BsUpload } from 'react-icons/bs'
 import Tablefiles from "./components/Tablefiles.js"
 import Header from './components/Header';
+import AddMenu from './components/AddMenu';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import sample_data from './data/data.json'
 
 
 function App() {
@@ -64,24 +66,36 @@ function App() {
   return (
     <>
       <Header />
+
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: "1em" }}>
+        <AddMenu />
+      </div>
+
+      <div style={{ width: "80%" }}>
+        {/*Passing an empty string for now so that it renders the headers of the table
+        passing null will not allow anything to render */}
+        <Tablefiles data={""} mode="home" />
+      </div>
+      {/*
       <div className='ButtonRow'>
         <div>
           <main>
             <div>
               <div onClick={() => document.querySelector(".input-field").click()}>
-                {/* <input type="file" accept='image/*' className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} onInput={uploadFn} multiple/> */}
+                {/* <input type="file" accept='image/*' className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} onInput={uploadFn} multiple/> }
                 <input type="file" className='input-field' hidden onChange={(e) => setUpfiles(e.target.files)} multiple />
 
                 <BsUpload size={36} className='uploadButton' />
               </div>
-              <button onClick={uploadFn}>Upload</button> {/* using button is better since onInput triggers before onChange (so empty files list is used instead)*/}
+              <button onClick={uploadFn}>Upload</button> {/* using button is better since onInput triggers before onChange (so empty files list is used instead)
               </div>
-
           </main>
         </div>
       </div>
+      */}
 
-      <Tablefiles data={tableData}/>
+      {/*<Tablefiles data={tableData}/>*/}
 
     </> 
   );
