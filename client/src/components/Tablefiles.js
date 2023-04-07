@@ -9,14 +9,8 @@ import { Circle, CheckCircle, CheckCircleFill } from 'react-bootstrap-icons'
 import { Eye, Download, Trash, X } from 'react-bootstrap-icons'
 import { ButtonGroup, Button, Breadcrumb } from 'react-bootstrap'
 import { useState } from 'react'
-
-function downloadFn() {
-  alert('Download Button was clicked');
-}
-
-function deleteFile() {
-  alert('Delete Button was clicked');
-}
+import { useContext } from 'react'
+import { FilesContext } from '../App.js'
 
 /*
   possible modes:
@@ -25,13 +19,14 @@ function deleteFile() {
 */
 const POSSIBLE_MODES = ["home", "fileupload"]
 function Tablefiles(props) {
-  {/*props.data would obtain the json info. type, size, last_modified, last_modified_by*/}
-  const jsondata = props.data;
-  {/* To determine how many files we have */}
-  const lengthData = Object.keys(jsondata).length;
+  {/*props.data would obtain the json info. type, size, last_modified, last_modified_by
+  const jsondata = props.data; */}
+  {/* To determine how many files we have 
+  const lengthData = Object.keys(jsondata).length;*/}
 
-  // default is home is not found
   const mode = POSSIBLE_MODES.includes(props.mode) ? props.mode : "home"; 
+
+  const {files, setFiles} = useContext(FilesContext);
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [hovereredRows, setHovereredRows] = useState([]);
@@ -50,8 +45,13 @@ function Tablefiles(props) {
   const isTickMarkHovered = (i) => hoveredTickMarks.includes(i);
 
   const renderHomeData = () => {
-    const rows = Object.entries(jsondata).map(([fname, fprops], index) => {
-      console.log("data index is", index, "with fname", fname, "and fprops", fprops);
+    console.log("files inside renderHomeData is currently: ");
+    console.log(files);
+
+    {/*const rows = Object.entries(files).map(([fname, fprops], index) => {*/}
+    const rows = files.map((fname, index) => {
+      console.log("data index is", index, "with fname", fname, "and fprops");
+
       const putCheckMark = (index) => {
         if (isRowSelected(index)) return <CheckCircleFill size={20} />;
         if (isTickMarkHovered(index)) return <CheckCircle size={20} onMouseLeave={() => handleUnHoverTickMark(index)} />;
@@ -79,21 +79,20 @@ function Tablefiles(props) {
           onClick={() => handleRowClick(index)}
         >
           <td className='text-center'> {putCheckMark(index)} </td>
-          <td> <GetIcon fname={fname} size={30} type={fprops.type} /> </td>
           <td>{fname}</td>
-          <td>{fprops.last_modified}</td>
-          <td>{fprops.last_modified_by}</td>
-          <td>{fprops.size} B</td>
           <td>{putActions(index)}</td>
         </tr>
       );
     });
 
     return rows;
-  }
+  } /* End of renderHomeData*/ 
+
 
   const renderFileUploadData = () => {
-    const rows = Object.entries(jsondata).map(([fname, fprops], index) => {
+    console.log("props.data is:");
+    console.log(props.data);
+    const rows = Object.entries(props.data).map(([fname, fprops], index) => {
       console.log("data index is", index, "with fname", fname, "and fprops", fprops);
       const putCheckMark = (index) => {
         if (isRowSelected(index)) return <CheckCircleFill size={20} />;
@@ -132,34 +131,28 @@ function Tablefiles(props) {
     return rows;
   }
 
-
   // sum of col-* is 12 to follow boostrap convention
   // https://getbootstrap.com/docs/5.3/utilities/colors/   these sources for breadcrumb color picking
   // https://getbootstrap.com/docs/5.3/utilities/background
   // TODO: in custom styling remove hyperlink underlines. On hover show blue link. otherwise just like as if it is 'active' breadcrumb.item
   // TODO: in custom styling try to put the separator between items and not inside the item (just like on figma)
   // TODO: in cusotm styling try to make the bordered rectangales in breadcrumb.item slightly dark grey background (like on figma)
-  if (mode == "home") {
+  
+    if(mode == "home"){
     return (
       <div className='table-container'>
 
-        {/* Breadcrumbs would let user see the tree directory*/} 
         <Breadcrumb className='fs-3'>
           <Breadcrumb.Item href='#' className='border rounded-5 px-3 py-1 bg-light text-secondary'>Root</Breadcrumb.Item>
           <Breadcrumb.Item href='prevfolder' className='border rounded-5 px-3 py-1 bg-light text-secondary'>prevfolder</Breadcrumb.Item>
           <Breadcrumb.Item active className='px-3 py-1 text-dark fw-bold'>currentfolder</Breadcrumb.Item>
         </Breadcrumb>
 
-
         <Table striped bordered hover>
           <thead>
             <tr>
               <th className='col-1' style={{ width: "5%" }}></th>
-              <th className='col-1'>Type</th>
               <th className='col-2'>Name</th>
-              <th className='col-3'>Last Modified</th>
-              <th className='col-2'>Last Modified By</th>
-              <th className='col-1'>Size</th>
               <th className='col-2'>Action</th>
             </tr>
           </thead>
@@ -169,29 +162,31 @@ function Tablefiles(props) {
         </Table>
       </div>
     );
-  }
-  else if (mode == "fileupload") {
-    return (
-      <div className='table-container'>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th className='col-1' style={{ width: "5%" }}></th>
-              <th className='col-1'>Type</th>
-              <th className='col-2'>Name</th>
-              <th className='col-1'>Size</th>
-              <th className='col-2'>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {renderFileUploadData()}
-          </tbody>
-        </Table>
-      </div>
-    );
-  }
+    }
 
-  return <></>; // otherwise nothing
+    else if (mode == "fileupload") {
+      return (
+        <div className='table-container'>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th className='col-1' style={{ width: "5%" }}></th>
+                <th className='col-1'>Type</th>
+                <th className='col-2'>Name</th>
+                <th className='col-1'>Size</th>
+                <th className='col-2'>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {renderFileUploadData()}
+            </tbody>
+          </Table>
+        </div>
+      );
+    }
+  
+    return <></>; // otherwise nothing
+  
 }
 
 export default Tablefiles;
