@@ -11,6 +11,7 @@ import { ButtonGroup, Button, Breadcrumb } from 'react-bootstrap'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { FilesContext } from '../App.js'
+import axios from 'axios'
 
 /*
   possible modes:
@@ -23,6 +24,37 @@ function Tablefiles(props) {
   const jsondata = props.data; */}
   {/* To determine how many files we have 
   const lengthData = Object.keys(jsondata).length;*/}
+
+
+  function downloadFn(fileName){
+    // Get request to download file
+    axios.get(`/downloadfile/${fileName}`, {responseType: 'blob'})
+    .then(res => {
+      console.log("/downloadfile/${fileName} returned: ", res);
+      //console.log(res.data);
+      return res.data;
+    })
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a  = document.createElement('a');
+      a.href = url;
+      const fName = fileName;
+      a.download = fName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      //link.click();
+      /*
+      const fName = fileName;
+      a.download = fName;
+      document.body*/
+    })
+    .catch((error) => {
+      console.log("Error downloading file inside downloadFn");
+    })
+
+  }
+
 
   const mode = POSSIBLE_MODES.includes(props.mode) ? props.mode : "home"; 
 
@@ -48,9 +80,12 @@ function Tablefiles(props) {
     console.log("files inside renderHomeData is currently: ");
     console.log(files);
 
-    {/*const rows = Object.entries(files).map(([fname, fprops], index) => {*/}
+    {/*const rows = Object.entries(files).map(([fname, fprops], index) => {
+      Each file will get its row, when we hover over it, the download button
+      will appear. 
+    */}
     const rows = files.map((fname, index) => {
-      console.log("data index is", index, "with fname", fname, "and fprops");
+      //console.log("data index is", index, "with fname", fname, "and fprops");
 
       const putCheckMark = (index) => {
         if (isRowSelected(index)) return <CheckCircleFill size={20} />;
@@ -64,7 +99,11 @@ function Tablefiles(props) {
         if (isRowHovered(index) || isRowSelected(index)) return (
           <ButtonGroup>
             <Button variant="outline-primary"><Eye size={25} /></Button>
-            <Button variant='outline-success'><Download size={25} /></Button>
+            <Button 
+              onClick={() => downloadFn(fname)}
+              variant='outline-success'>
+              <Download size={25} />
+            </Button>
             <Button variant="outline-danger"><Trash size={25} /></Button>
           </ButtonGroup>
         );
