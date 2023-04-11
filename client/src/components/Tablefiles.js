@@ -7,7 +7,7 @@ import GetIcon from '../utils/GetIcon.js'
 // checkcirclefill: when row is selected
 import { Circle, CheckCircle, CheckCircleFill, CloudCheckFill, Download } from 'react-bootstrap-icons'
 import { ButtonGroup, Button, Breadcrumb } from 'react-bootstrap'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useContext } from 'react'
 import { FilesContext } from '../App.js'
 import axios from 'axios'
@@ -62,6 +62,30 @@ function Tablefiles(props) {
 
   }
 
+  function updateList(){
+    setTimeout(async function() {
+      try{
+        axios.get("/fileslist")
+        .then(res => {
+          console.log("Received table data");
+          console.log(res);
+          console.log("res.data is");
+          console.log(res.data);
+          {/* The response here is an array with just the names of the file */}
+          console.log("The list of files inside handleDone is: ");
+          console.log(res.data);
+          setFiles(res.data.files);
+        })
+      }
+      catch(error){
+        console.log(error);
+      }
+    }, 500 ); 
+  }
+
+  useEffect(() => {
+    updateList();
+  }, []);
 
   const mode = POSSIBLE_MODES.includes(props.mode) ? props.mode : "home"; 
 
