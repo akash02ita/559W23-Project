@@ -11,21 +11,6 @@
   font-weight: 700;
 }
 
-
-.SearchBar{
-  padding-left: 4%;
-  margin-top: 3%;/*moves bar downwards*/
-  min-height: 40px;
-  min-width: 600px;
-  border-radius: 22px;
-  border: 2px #0072C6;
-  background-color: #D3D3D3;
-  border-bottom-color: #0072C6;
-  border-left-color: #0072C6;
-  border-right-color: #0072C6;
-  border-top-color: #0072C6;
-}
-
 .ButtonRow{
   margin-top: 5%;
   display: flex;

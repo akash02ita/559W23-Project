@@ -187,7 +187,7 @@ function Tablefiles(props) {
   // TODO: in custom styling try to put the separator between items and not inside the item (just like on figma)
   // TODO: in cusotm styling try to make the bordered rectangales in breadcrumb.item slightly dark grey background (like on figma)
   
-    if(mode == "home"){
+    if(mode === "home"){
     return (
       <div className='table-container'>
 
