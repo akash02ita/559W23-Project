@@ -120,6 +120,10 @@ load_dotenv("./.env") # python must be exectured from server path
 central_node_ip = os.getenv("CENTRAL_NODE_IP")
 central_node_port = int(os.getenv("CENTRAL_NODE_PORT"))
 
+from socket import gethostbyname
+from socket import gethostname
+replica_node_ip = gethostbyname(gethostname())
+
 if __name__ == "__main__":
     DEFAULT_FOLDER_PATH = "./temp"
     FOLDER_PATH = None
