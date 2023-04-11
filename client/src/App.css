@@ -3,7 +3,7 @@
 }
 
 .app-navbar{
-  padding-left: 2rem;
+  padding-left: 2rem !important;
 }
 
 #headerTxt{
