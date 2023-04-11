@@ -109,6 +109,7 @@ function Tablefiles(props) {
               onClick={() => downloadFn(fname)}
               variant='outline-success'>
               <Download size={25} />
+              DOWNLOAD
             </Button>
           </ButtonGroup>
         );
