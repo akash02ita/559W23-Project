@@ -2,6 +2,10 @@
   background-color: #85ACC2;
 }
 
+.app-navbar{
+  padding-left: 2rem;
+}
+
 #headerTxt{
   padding-right: 20%;
   margin-bottom: 0; /*So that the footer with the full name sits right below it*/
