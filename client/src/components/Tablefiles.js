@@ -67,13 +67,13 @@ function Tablefiles(props) {
       try{
         axios.get("/fileslist")
         .then(res => {
-          console.log("Received table data");
-          console.log(res);
-          console.log("res.data is");
-          console.log(res.data);
+          //console.log("Received table data");
+          //console.log(res);
+          //console.log("res.data is");
+          //console.log(res.data);
           {/* The response here is an array with just the names of the file */}
-          console.log("The list of files inside handleDone is: ");
-          console.log(res.data);
+          //console.log("The list of files inside handleDone is: ");
+          //console.log(res.data);
           setFiles(res.data.files);
         })
       }
@@ -108,8 +108,8 @@ function Tablefiles(props) {
   const isTickMarkHovered = (i) => hoveredTickMarks.includes(i);
 
   const renderHomeData = () => {
-    console.log("files inside renderHomeData is currently: ");
-    console.log(files);
+    //console.log("files inside renderHomeData is currently: ");
+    //console.log(files);
 
     {/*const rows = Object.entries(files).map(([fname, fprops], index) => {
       Each file will get its row, when we hover over it, the download button
@@ -160,8 +160,8 @@ function Tablefiles(props) {
 
 
   const renderFileUploadData = () => {
-    console.log("props.data is:");
-    console.log(props.data);
+    //console.log("props.data is:");
+    //console.log(props.data);
     const rows = Object.entries(props.data).map(([fname, fprops], index) => {
       console.log("data index is", index, "with fname", fname, "and fprops", fprops);
       const putCheckMark = (index) => {

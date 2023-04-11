@@ -28,7 +28,7 @@ function FileUpload({ flag, setFlag }) {
   const getFilesJson = () => {
 
       // I only need the files that user has currently selected.
-      console.log("Files Selected by User are ", filesSelected);
+      //console.log("Files Selected by User are ", filesSelected);
       const data = {};
       
       Object.values(filesSelected).forEach((val) => {
@@ -54,13 +54,13 @@ function FileUpload({ flag, setFlag }) {
       try{
         axios.get("/fileslist")
         .then(res => {
-          console.log("Received table data");
+          /*console.log("Received table data");
           console.log(res);
           console.log("res.data is");
           console.log(res.data);
-          {/* The response here is an array with just the names of the file */}
+          {/* The response here is an array with just the names of the file 
           console.log("The list of files inside handleDone is: ");
-          console.log(res.data);
+          console.log(res.data);*/
           setFiles(res.data.files);
         })
       }
