@@ -67,7 +67,7 @@ function FileUpload({ flag, setFlag }) {
       catch(error){
         console.log(error);
       }
-    }, 1500 );
+    }, 500 );
     
   }
 

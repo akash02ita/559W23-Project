@@ -12,7 +12,7 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { FilesContext } from '../App.js'
 import axios from 'axios'
-
+import moment from 'moment'
 /*
   possible modes:
     "home" -> tablefiles used inside home
@@ -25,6 +25,14 @@ function Tablefiles(props) {
   {/* To determine how many files we have 
   const lengthData = Object.keys(jsondata).length;*/}
 
+  /*
+  function lastModTime(){
+    var date = moment();
+    var currentDate = date.format('MMM DD YYYY');
+    return currentDate;
+  }*/
+  var date = moment();
+  var currentDate = date.format('MMM DD[,] YYYY');
 
   function downloadFn(fileName){
     // Get request to download file
@@ -119,6 +127,8 @@ function Tablefiles(props) {
         >
           <td className='text-center'> {putCheckMark(index)} </td>
           <td>{fname}</td>
+          <td>{currentDate}</td>
+          <td>Anonymous</td>
           <td>{putActions(index)}</td>
         </tr>
       );
@@ -191,7 +201,9 @@ function Tablefiles(props) {
           <thead>
             <tr>
               <th className='col-1' style={{ width: "5%" }}></th>
-              <th className='col-2'>Name</th>
+              <th className='col-2'>Name      </th>
+              <th className='col-2'>Last Modified</th>
+              <th className='col-2'>Last Modified By</th>
               <th className='col-2'>Action</th>
             </tr>
           </thead>
