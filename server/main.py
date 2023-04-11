@@ -67,8 +67,16 @@ import socket
 from socket import gethostbyname
 from socket import gethostname
 port = 9000
+
+from dotenv import load_dotenv
+import os
+load_dotenv("./.env")
+
+central_node_ip = os.getenv("CENTRAL_NODE_IP")
+central_node_port = int(os.getenv("CENTRAL_NODE_PORT"))
+main_port = int(os.getenv("MAIN_PORT"))
 if __name__ == "__main__":
     ip = gethostbyname(gethostname())
-    print(f"Use the link: http://{ip}:{port}")
-    print(f"Api Swagger at: http://{ip}:{port}/docs")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    print(f"Use the link: http://{ip}:{main_port}")
+    print(f"Api Swagger at: http://{ip}:{main_port}/docs")
+    uvicorn.run(app, host="0.0.0.0", port=main_port)

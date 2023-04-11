@@ -110,6 +110,16 @@ class ReplicaNodeService(rpyc.Service):
 # The code for connecting the replica with the central node
 # goes in here
 import sys, os
+from dotenv import load_dotenv
+import os
+
+# only one of these 2 will end up loading variables
+load_dotenv("../.env") # in case python is execute from rpc path
+load_dotenv("./.env") # python must be exectured from server path
+
+central_node_ip = os.getenv("CENTRAL_NODE_IP")
+central_node_port = int(os.getenv("CENTRAL_NODE_PORT"))
+
 if __name__ == "__main__":
     DEFAULT_FOLDER_PATH = "./temp"
     FOLDER_PATH = None

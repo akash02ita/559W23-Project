@@ -7,7 +7,7 @@ import hashlib
 from util import ultra_max_pro_deep_copy
 is_backup = False
 PRIMARY_CENTRAL_NODE_PORT = 8000
-BACKUP_CENTRAL_NODE_PORT = 8050
+# BACKUP_CENTRAL_NODE_PORT = 8000
 
 class CentralNodeService(rpyc.Service):
     def __init__(self, existing_replicas = []):
@@ -317,6 +317,16 @@ class BackupCentralNode(threading.Thread):
 
 
 import sys
+
+from dotenv import load_dotenv
+import os
+
+# only one of these 2 will end up loading variables
+load_dotenv("../.env") # in case python is execute from rpc path
+load_dotenv("./.env") # python must be exectured from server path
+
+PRIMARY_CENTRAL_NODE_PORT = int(os.getenv("CENTRAL_NODE_PORT"))
+
 if __name__ == "__main__":
     # Start the central node server on port 8000
         is_backup = False
