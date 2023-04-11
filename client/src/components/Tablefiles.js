@@ -127,7 +127,7 @@ function Tablefiles(props) {
       const putActions = (index) => {
         // TODO: add 3 dot button on side
         // outline-* class used to allow hover effects with fill
-        if (isRowHovered(index) || isRowSelected(index)) return (
+        if (isRowHovered(index)) return (
           <ButtonGroup>
             <Button 
               onClick={() => downloadFn(fname)}
