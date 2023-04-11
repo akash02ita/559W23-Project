@@ -1,5 +1,5 @@
 import Dropdown from 'react-bootstrap/Dropdown';
-import { Plus, FileEarmarkArrowUp, BoxArrowUp, FilePlus, FolderPlus } from 'react-bootstrap-icons';
+import { Plus, FileEarmarkArrowUp } from 'react-bootstrap-icons';
 import FileUpload from './FileUpload';
 import { useState } from 'react';
 
@@ -15,9 +15,6 @@ function AddMenu() {
 
         <Dropdown.Menu>
           <Dropdown.Item onClick={() => setFileUploadFlag(true)}><FileEarmarkArrowUp />File upload </Dropdown.Item>
-          <Dropdown.Item href="#/action-2"><BoxArrowUp />Folder upload</Dropdown.Item>
-          <Dropdown.Item href="#/action-3"><FolderPlus />Create folder</Dropdown.Item>
-          <Dropdown.Item href="#/action-3"><FilePlus />Create file</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
       {/* The two props that will be passed to FileUpload are flag and setFlag */}
