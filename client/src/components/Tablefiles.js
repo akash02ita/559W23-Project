@@ -192,9 +192,7 @@ function Tablefiles(props) {
       <div className='table-container'>
 
         <Breadcrumb className='fs-3'>
-          <Breadcrumb.Item href='#' className='border rounded-5 px-3 py-1 bg-light text-secondary'>Root</Breadcrumb.Item>
-          <Breadcrumb.Item href='prevfolder' className='border rounded-5 px-3 py-1 bg-light text-secondary'>prevfolder</Breadcrumb.Item>
-          <Breadcrumb.Item active className='px-3 py-1 text-dark fw-bold'>currentfolder</Breadcrumb.Item>
+          <Breadcrumb.Item active className='px-3 py-1 text-dark fw-bold'>Current Files</Breadcrumb.Item>
         </Breadcrumb>
 
         <Table striped bordered hover>
