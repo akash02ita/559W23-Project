@@ -9,7 +9,8 @@ app = FastAPI()
 
 #adding cors urls
 origins = [
-    'http://localhost:3000'
+    #'http://localhost:3000'
+    "*" # allow everything
 ]
 
 # adding middleware
@@ -62,5 +63,12 @@ async def get_list_of_files():
     return {"files": files_array}
 
 
+import socket
+from socket import gethostbyname
+from socket import gethostname
+port = 9000
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=9000)
+    ip = gethostbyname(gethostname())
+    print(f"Use the link: http://{ip}:{port}")
+    print(f"Api Swagger at: http://{ip}:{port}/docs")
+    uvicorn.run(app, host="0.0.0.0", port=port)
