@@ -147,7 +147,6 @@ function Tablefiles(props) {
           onMouseLeave={() => { handleRowUnHover(index); handleUnHoverTickMark(index) }}
           onClick={() => handleRowClick(index)}
         >
-          <td className='text-center'> {putCheckMark(index)} </td>
           <td>{fname}</td>
           <td>{currentDate}</td>
           <td>Anonymous</td>
@@ -219,7 +218,6 @@ function Tablefiles(props) {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th className='col-1' style={{ width: "5%" }}></th>
               <th className='col-2'>Name      </th>
               <th className='col-2'>Last Modified</th>
               <th className='col-2'>Last Modified By</th>
