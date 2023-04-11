@@ -4,7 +4,7 @@ Requirements to run this system:
 
 Node Package Manager (npm)
 
-Once on the client side, a user can use the following command to install all the packages that the React app requires:
+Once on the client folder, a user can use the following command to install all the packages that the React app requires:
 npm install
 
 To start the Frontend application, type the following into the command line:
@@ -12,7 +12,7 @@ npm start
 
 For the "server" folder, follow the following steps:
 -Make sure to have python, and pip installed in your machine.
--A virtual environment was also created inside the 'server' folder. Setting up an environment can be found here:
+-A virtual environment was also created inside the 'server' folder, so users will need to create their own. Setting up an environment can be found here:
 https://towardsdatascience.com/create-virtual-environment-using-virtualenv-and-add-it-to-jupyter-notebook-6e1bf4e03415
 
 
