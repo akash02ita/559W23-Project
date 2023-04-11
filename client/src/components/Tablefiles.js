@@ -5,8 +5,7 @@ import GetIcon from '../utils/GetIcon.js'
 // circle: when hovering on table
 // checkcircle: when hovering on circle
 // checkcirclefill: when row is selected
-import { Circle, CheckCircle, CheckCircleFill } from 'react-bootstrap-icons'
-import { Eye, Download, Trash, X } from 'react-bootstrap-icons'
+import { Circle, CheckCircle, CheckCircleFill, CloudCheckFill, Download } from 'react-bootstrap-icons'
 import { ButtonGroup, Button, Breadcrumb } from 'react-bootstrap'
 import { useState } from 'react'
 import { useContext } from 'react'
@@ -152,8 +151,7 @@ function Tablefiles(props) {
         // outline-* class used to allow hover effects with fill
         if (isRowHovered(index) || isRowSelected(index)) return (
           <ButtonGroup>
-            <Button variant="outline-primary"><Eye size={25} /></Button>
-            <Button variant="outline-danger"><X size={25} /></Button>
+            <Button variant="outline-primary"><CloudCheckFill size={25} />{" "} CHOOSE</Button>
           </ButtonGroup>
         );
         // ensure that if no butotn group is selected the size still matches. Otherwise suddent growth in size is odd.
