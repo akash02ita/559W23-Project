@@ -106,13 +106,11 @@ function Tablefiles(props) {
         // outline-* class used to allow hover effects with fill
         if (isRowHovered(index) || isRowSelected(index)) return (
           <ButtonGroup>
-            <Button variant="outline-primary"><Eye size={25} /></Button>
             <Button 
               onClick={() => downloadFn(fname)}
               variant='outline-success'>
               <Download size={25} />
             </Button>
-            <Button variant="outline-danger"><Trash size={25} /></Button>
           </ButtonGroup>
         );
         // ensure that if no butotn group is selected the size still matches. Otherwise suddent growth in size is odd.
@@ -187,7 +185,7 @@ function Tablefiles(props) {
   // TODO: in custom styling try to put the separator between items and not inside the item (just like on figma)
   // TODO: in cusotm styling try to make the bordered rectangales in breadcrumb.item slightly dark grey background (like on figma)
   
-    if(mode === "home"){
+    if(mode == "home"){
     return (
       <div className='table-container'>
 
